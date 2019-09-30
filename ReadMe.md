@@ -34,7 +34,34 @@ Once you have successfully run a simulation, use your python skills to answer to
 
 ### Getting Started
 
-To get started on this project, fork this course repo and then clone **your own fork** so you can push your code to GitHub and receive important updates to the code if necessary.  You'll find instructions for what you need to do marked within the files themselves. Anything that you explicitly need to code should be marked with a comment that starts with `#TODO`.  
+**Important:**
+Please follow these instructions *exactly*. If you skip a step or do them out of order, it may not work correctly or you may not earn credit towards your GitHub commit streak.
+
+### Repository Setup
+Set up your local clone of this project repo on your computer.
+
+1. **Clone** (do not *fork*) this repo on GitHub onto your local computer.
+  - First open your terminal and navigate into the folder where you keep your projects:
+  `cd ~/MakeSchool/Projects` (or something similar for your folders)
+  - Then run this command to *clone* the course repo:
+  `git clone https://github.com/Make-School-Labs/Herd-Immunity-Simulation.git`
+  - Now navigate into the new folder Git just created:
+  `cd Herd-Immunity-Simulation`
+
+1. [**Create a new empty repo** on GitHub](https://github.com/new) also named `Herd-Immunity-Simulation` and **do not** initialize it with a ReadMe. (Creating a *new* repo instead of a *fork* allows you to earn credit towards your GitHub commit streak.)
+
+1. **Set the `origin` remote's URL** on your local repo to point to your new repo on GitHub:
+`git remote set-url origin https://github.com/<your-username>/Herd-Immunity-Simulation.git`
+
+1. **Push your local repo** to your *remote* GitHub repo to link your `master` branch to your `origin` remote:
+`git push -u origin master`
+
+1. **Commit your code** to your local repo frequently (each time you've made meaningful progress).
+
+1. **Push your commits** to your remote GitHub repo when you want to publish and backup your code:
+`git push` (the `-u` in the previous command lets you omit `origin master` afterward).
+
+**Let's get coding!** You'll find instructions for what you need to do marked within the files themselves. Anything that you explicitly need to code should be marked with a comment that starts with `#TODO`.
 
 ### Running the program
 
