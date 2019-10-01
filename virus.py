@@ -18,8 +18,8 @@ class TestVirus(unittest.TestCase):
         # TODO: Create your own test that models the virus you are working with
         '''Check to make sure that the virus instantiator is working.'''
         virus = Virus("HIV", 0.8, 0.3)
-        another_virus = Virus("Polio", 0.4, 0.3)
-        third_virus = Virus("Tubercolosis", 0.65, 0.7)
+        another_virus = Virus("Polio", 0.2, 0.6)
+        third_virus = Virus("Tubercolosis", 0.65, 0.55)
 
         # assert statements
         assert virus.name == "HIV"
@@ -27,8 +27,8 @@ class TestVirus(unittest.TestCase):
         assert virus.mortality_rate == 0.3
         assert another_virus.name == "Polio"
         assert third_virus.name == "Tubercolosis"
-        assert another_virus.repro_rate == 0.4
-        assert third_virus.mortality_rate == 0.7
+        assert another_virus.repro_rate == 0.2
+        assert third_virus.mortality_rate == 0.55
 
     def test_insufficient_args(self):
         '''
