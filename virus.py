@@ -1,25 +1,42 @@
+import unittest
+
+
 class Virus(object):
     '''Properties and attributes of the virus used in Simulation.'''
 
     def __init__(self, name, repro_rate, mortality_rate):
+        err_msg = "Rates are too high!"
+        assert repro_rate <= 1 or mortality_rate <= 1, err_msg
+
         self.name = name
         self.repro_rate = repro_rate
         self.mortality_rate = mortality_rate
 
 
-def test_virus_instantiation():
-    # TODO: Create your own test that models the virus you are working with
-    '''Check to make sure that the virus instantiator is working.'''
-    virus = Virus("HIV", 0.8, 0.3)
+class TestVirus(unittest.TestCase):
+    def test_virus_instantiation(self):
+        # TODO: Create your own test that models the virus you are working with
+        '''Check to make sure that the virus instantiator is working.'''
+        virus = Virus("HIV", 0.8, 0.3)
 
-    # another test Virus instance
-    another_virus = Virus("Smallpox", 0.95, 0.25)
+        # assert statements
+        assert virus.name == "HIV"
+        assert virus.repro_rate == 0.8
+        assert virus.mortality_rate == 0.3
 
-    # assert statements
-    assert virus.name == "HIV"
-    assert virus.repro_rate == 0.8
-    assert virus.mortality_rate == 0.3
+    def test_insufficient_args(self):
+        '''
+        Credit to
+        https://stackoverflow.com/questions/88325/how-do-i-unit-test-an-init-method-of-a-python-class-with-assertraises
+        for inspiring this test.
+        '''
+        name = "HIV"
+        repro_rate = 1.2
+        mortality_rate = 2.9
+        self.assertRaises(AssertionError,
+                          Virus, name, repro_rate, mortality_rate)
 
-    assert another_virus.name == "Smallpox"
-    assert another_virus.repro_rate == 0.95
-    assert another_virus.mortality_rate == 0.25
+
+if __name__ == '__main__':
+    unittest.main()
+    test_virus_instantiation()
