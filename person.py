@@ -66,7 +66,7 @@ def test_not_vacc_person_instantiation():
 
 def test_sick_person_instantiation():
     # Create a Virus object to give a Person object an infection
-    virus = Virus("Dysentery", 0.7, 0.2)
+    virus = Virus("Ebola", 0.7, 0.23)
     # Create a Person object and give them the virus infection
     person = Person(3, False, virus)
     # test the values at each attribute
@@ -78,7 +78,7 @@ def test_sick_person_instantiation():
 
 def test_did_survive_infection():
     # Create a Virus object to give a Person object an infection
-    virus = Virus("Smallpox", 0.6, 0.17)
+    virus = Virus("Smallpox", 0.17, 0.59)
     # Create a Person object and give them the virus infection
     person_sam = Person(4, False, virus)
 
