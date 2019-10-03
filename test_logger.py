@@ -25,7 +25,7 @@ class TestLogger(unittest.TestCase):
 
     def test_log_interaction(self):
         file_name = 'test_log_interaction.txt'
-        open(file_name, 'a').close()
+        open(file_name, 'w+').close()
         # setup
         infector = Person(0, False)
         person1 = Person(1, False) 
@@ -47,12 +47,45 @@ class TestLogger(unittest.TestCase):
         assert lines[1] == "0 didn't infect 2 because they are already vaccinated\n"
         assert lines[2] == "0 didn't infect 3 because they are already sick\n"
 
-    # def test_log_infection_survival(self):
-    #     pass
+    def test_log_infection_survival(self):
+        file_name = 'test_log_infection_survival.txt'
+        open(file_name, 'w+').close()
 
-    # def test_log_time_step(self):
-    #     pass
+        # setup
+        person1 = Person(1, False) 
+        person2 = Person(2, False)
+        log_file = Logger(file_name)
+
+        f = open(file_name, 'r')
+        log_file.log_infection_survival(person1, True)
+        log_file.log_infection_survival(person2, False)
+
+        lines = f.readlines()
+        f.close()
+        os.remove(file_name)
+
+        assert lines[0] == "1 died from infection.\n"
+        assert lines[1] == "2 survived infection.\n"
+
+    def test_log_time_step(self):
+        file_name = 'test_log_time_step.txt'
+        open(file_name, 'w+').close()
+        log_file = Logger(file_name)
+
+        f = open(file_name, 'r')
+        log_file.log_time_step(15)
+
+        lines = f.readlines()
+        f.close()
+        os.remove(file_name)
+
+        assert lines[0] == "- - - - - - - - - - - - - - - - - - - - - \n"
+        assert lines[1] == "None people were infected durint TIME STEP 15.\n"
+        assert lines[2] == "None people died during TIME STEP 15.\n"
+        assert lines[3] == "None people are currently infected.\n"
+        assert lines[4] == "None people died in total by far.\n"
+        assert lines[5] == "TIME STEP 15 ended, beginning TIME STEP 16.\n"
+
 
 if __name__ == '__main__':
     unittest.main()
-    test_virus_instantiation()
