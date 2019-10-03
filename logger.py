@@ -41,10 +41,6 @@ class Logger(object):
             elif random_person_vacc:
                 f.write(f"{person._id} didn't infect {random_person._id} because they are already vaccinated\n")
         f.close()
-        # TODO: Finish this method. Think about how the booleans passed (or not passed)
-        # represent all the possible edge cases. Use the values passed along with each person,
-        # along with whether they are sick or vaccinated when they interact to determine
-        # exactly what happened in the interaction and create a String, and write to your logfile.
 
     def log_infection_survival(self, person, did_die_from_infection):
         ''' The Simulation object uses this method to log the results of every
@@ -53,10 +49,13 @@ class Logger(object):
         The format of the log should be:
             "{person.ID} died from infection\n" or "{person.ID} survived infection.\n"
         '''
-        # TODO: Finish this method. If the person survives, did_die_from_infection
-        # should be False.  Otherwise, did_die_from_infection should be True.
-        # Append the results of the infection to the logfile
-        pass
+        f = open(self.file_name, 'a')
+        if did_die_from_infection:
+            f.write(f"{person._id} died from infection.\n")
+        elif not did_die_from_infection:
+            f.write(f"{person._id} survived infection.\n")
+
+        f.close()
 
     def log_time_step(self, time_step_number):
         ''' STRETCH CHALLENGE DETAILS:
@@ -73,6 +72,14 @@ class Logger(object):
         The format of this log should be:
             "Time step {time_step_number} ended, beginning {time_step_number + 1}\n"
         '''
+        f = open(self.file_name, 'a')
+        f.write("- - - - - - - - - - - - - - - - - - - - - \n")
+        f.write(f"{None} people were infected durint TIME STEP {time_step_number}.\n")
+        f.write(f"{None} people died during TIME STEP {time_step_number}.\n")
+        f.write(f"{None} people are currently infected.\n")
+        f.write(f"{None} people died in total by far.\n")
+        f.write(f"TIME STEP {time_step_number} ended, beginning TIME STEP {time_step_number + 1}.\n")
+        f.close()
         # TODO: Finish this method. This method should log when a time step ends, and a
         # new one begins.
         # NOTE: Here is an opportunity for a stretch challenge!
