@@ -13,7 +13,7 @@ class Simulation(object):
     population that are vaccinated, the size of the population, and the amount of initially
     infected people in a population are all variables that can be set when the program is run.
     '''
-    def __init__(self, pop_size, vacc_percentage, initial_infected=1, virus):
+    def __init__(self, pop_size, vacc_percentage, virus, initial_infected=1):
         ''' Logger object logger records all events during the simulation.
         Population represents all Persons in the population.
         The next_person_id is the next available id for all created Persons,
@@ -36,10 +36,9 @@ class Simulation(object):
         # TODO: Store each newly infected person's ID in newly_infected attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.logger = None
         self.population = [] # List of Person objects
         self.pop_size = pop_size # Int
-        self.next_person_id = 0 # Int
+        self.next_person_id = pop_size # Int
         self.virus = virus # Virus object
         self.initial_infected = initial_infected # Int
         self.total_infected = 0 # Int
@@ -48,7 +47,11 @@ class Simulation(object):
         self.total_dead = 0 # Int
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
             virus_name, population_size, vacc_percentage, initial_infected)
+        self.logger = Logger(self.file_name)
         self.newly_infected = []
+
+        self.population = self._create_population(initial_infected)
+        
 
     def _create_population(self, initial_infected):
         '''This method will create the initial population.
@@ -60,15 +63,18 @@ class Simulation(object):
                 list: A list of Person objects.
 
         '''
-        # TODO: Finish this method!  This method should be called when the simulation
-        # begins, to create the population that will be used. This method should return
-        # an array filled with Person objects that matches the specifications of the
-        # simulation (correct number of people in the population, correct percentage of
-        # people vaccinated, correct number of initially infected people).
-
-        # Use the attributes created in the init method to create a population that has
-        # the correct intial vaccination percentage and initial infected.
-        pass
+        number_vaccinated = int(self.vacc_percentage * self.pop_size)
+        total = random.sample(range(self.pop_size), number_vaccinated + self.initial_infected)
+        indices_infected = [total.pop(random.randint(0, len(total))) for _ in range(self.initial_infected)]
+        indices_vaccinated = total
+        for index in self.pop_size:
+            if index in indices_infected and index not in indices_infected:
+                population[index] = Person(index)
+            elif index not in indices_infected and index in indices_infected:
+                population[index] =  Person(index, False, self.virus)
+            else:
+                population[index] = Person(index, False)
+        return population
 
     def _simulation_should_continue(self):
         ''' The simulation should only end if the entire population is dead
@@ -97,9 +103,10 @@ class Simulation(object):
         should_continue = None
 
         while should_continue:
+            pass
         # TODO: for every iteration of this loop, call self.time_step() to compute another
         # round of this simulation.
-        print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
+        print(f'The simulation has ended after {time_step_counter} turns.', )
         pass
 
     def time_step(self):
@@ -168,6 +175,6 @@ if __name__ == "__main__":
         initial_infected = 1
 
     virus = Virus(name, repro_rate, mortality_rate)
-    sim = Simulation(pop_size, vacc_percentage, initial_infected, virus)
+    sim = Simulation(pop_size, vacc_percentage,  virus, initial_infected)
 
     sim.run()
