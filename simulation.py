@@ -121,11 +121,11 @@ class Simulation(object):
             Returns:
                 bool: False for simulation should continue, True otherwise.
         '''
-        return self.total_dead == self.pop_size or self.vacc_percentage == 1
+        return self.total_dead + len([person for person in self.population if person.is_vaccinated and person.is_alive]) == self.pop_size
 
     def run(self):
-        ''' This method should run the simulation until all requirements for
-            ending the simulation are met.
+        ''' This method should run the simulation until all requirements for ending
+        the simulation are met.
         '''
         time_step_counter = 1
         should_continue = None
@@ -230,12 +230,12 @@ class Simulation(object):
 
 if __name__ == "__main__":
     params = sys.argv[1:]
-    virus_name = str(params[0])
-    repro_rate = float(params[1])
-    mortality_rate = float(params[2])
+    virus_name = str(params[2])
+    repro_rate = float(params[4])
+    mortality_rate = float(params[3])
 
-    pop_size = int(params[3])
-    vacc_percentage = float(params[4])
+    pop_size = int(params[0])
+    vacc_percentage = float(params[1])
 
     if len(params) == 6:
         initial_infected = int(params[5])
