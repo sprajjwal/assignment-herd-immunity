@@ -48,7 +48,8 @@ class TestLogger(unittest.TestCase):
 
         # tests
         assert lines[0] == "0 infects 1\n"
-        assert lines[1] == "0 didn't infect 2 because they are vaccinated\n"
+        vacc_message = "0 didn't infect 2 because they are already vaccinated\n"
+        assert lines[1] == vacc_message
         assert lines[2] == "0 didn't infect 3 because they are already sick\n"
 
     def test_log_infection_survival(self):
@@ -77,14 +78,14 @@ class TestLogger(unittest.TestCase):
         log_file = Logger(file_name)
 
         f = open(file_name, 'r')
-        log_file.log_time_step(15)
+        log_file.log_time_step(15, None, None, None, None)
 
         lines = f.readlines()
         f.close()
         os.remove(file_name)
 
         assert lines[0] == "- - - - - - - - - - - - - - - - - - - - - \n"
-        assert lines[1] == "None people were infected durint TIME STEP 15.\n"
+        assert lines[1] == "None people were infected during TIME STEP 15.\n"
         assert lines[2] == "None people died during TIME STEP 15.\n"
         assert lines[3] == "None people are currently infected.\n"
         assert lines[4] == "None people died in total by far.\n"
