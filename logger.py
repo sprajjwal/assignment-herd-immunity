@@ -57,7 +57,7 @@ class Logger(object):
 
         f.close()
 
-    def log_time_step(self, time_step_number):
+    def log_time_step(self, time_step_number, infected_this_step , died_this_step, cur_infected, total_dead):
         ''' STRETCH CHALLENGE DETAILS:
 
         If you choose to extend this method, the format of the summary statistics logged
@@ -74,11 +74,12 @@ class Logger(object):
         '''
         f = open(self.file_name, 'a')
         f.write("- - - - - - - - - - - - - - - - - - - - - \n")
-        f.write(f"{None} people were infected durint TIME STEP {time_step_number}.\n")
-        f.write(f"{None} people died during TIME STEP {time_step_number}.\n")
-        f.write(f"{None} people are currently infected.\n")
-        f.write(f"{None} people died in total by far.\n")
+        f.write(f"{infected_this_step} people were infected during TIME STEP {time_step_number}.\n")
+        f.write(f"{died_this_step} people died during TIME STEP {time_step_number}.\n")
+        f.write(f"{cur_infected} people were infected.\n")
+        f.write(f"{total_dead} people died in total by far.\n")
         f.write(f"TIME STEP {time_step_number} ended, beginning TIME STEP {time_step_number + 1}.\n")
+        f.write("- - - - - - - - - - - - - - - - - - - - - \n\n")
         f.close()
         # TODO: Finish this method. This method should log when a time step ends, and a
         # new one begins.

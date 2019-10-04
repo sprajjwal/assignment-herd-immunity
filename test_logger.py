@@ -34,9 +34,9 @@ class TestLogger(unittest.TestCase):
         log_file = Logger(file_name)
 
         f = open(file_name, 'r')
-        log_file.log_interaction(infector, person1, False, False, True)
-        log_file.log_interaction(infector, person2, False, True, False)
-        log_file.log_interaction(infector, person3, True, False, False)
+        log_file.log_interaction(infector, person1, did_infect=True)
+        log_file.log_interaction(infector, person2,  random_person_vacc=True)
+        log_file.log_interaction(infector, person3, random_person_sick=True)
 
         lines = f.readlines()
         f.close()

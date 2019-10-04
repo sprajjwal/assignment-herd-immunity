@@ -30,7 +30,7 @@ class Person(object):
         If Person survives, they become vaccinated and they have no infection.
         Return a boolean value indicating whether they survived the infection.
         '''
-        immunity_strength = random.uniform(0, 1)
+        immunity_strength = random.random()
 
         if immunity_strength < self.infection.mortality_rate:
             self.is_alive = False
