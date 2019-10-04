@@ -12,15 +12,19 @@ class TestLogger(unittest.TestCase):
 
     def test_write_metadata(self):
         file_name = 'file.txt'
-        assert os.path.isfile(file_name) == False
+        assert os.path.isfile(file_name) is False
         log_file = Logger(file_name)
         log_file.write_metadata(100, 0.5, 'HIV', 0.4, 0.8)
         f = open(file_name, 'r')
-        assert os.path.isfile(file_name) 
+        assert os.path.isfile(file_name)
         line = f.readline()
         f.close()
         os.remove(file_name)
-        test = "Population size: 100\tVaccination percentage: 0.5\tVirus name: HIV\tMortality rate: 0.4\tBasic reproduction number: 0.8\n"
+        test = ("Population size: 100\t" +
+                "Vaccination percentage: 0.5\t" +
+                "Virus name: HIV\t" +
+                "Mortality rate: 0.4\t" +
+                "Basic reproduction number: 0.8\n")
         assert line == test
 
     def test_log_interaction(self):
@@ -28,7 +32,7 @@ class TestLogger(unittest.TestCase):
         open(file_name, 'w+').close()
         # setup
         infector = Person(0, False)
-        person1 = Person(1, False) 
+        person1 = Person(1, False)
         person2 = Person(2, False)
         person3 = Person(3, True)
         log_file = Logger(file_name)
@@ -44,7 +48,7 @@ class TestLogger(unittest.TestCase):
 
         # tests
         assert lines[0] == "0 infects 1\n"
-        assert lines[1] == "0 didn't infect 2 because they are already vaccinated\n"
+        assert lines[1] == "0 didn't infect 2 because they are vaccinated\n"
         assert lines[2] == "0 didn't infect 3 because they are already sick\n"
 
     def test_log_infection_survival(self):
@@ -52,7 +56,7 @@ class TestLogger(unittest.TestCase):
         open(file_name, 'w+').close()
 
         # setup
-        person1 = Person(1, False) 
+        person1 = Person(1, False)
         person2 = Person(2, False)
         log_file = Logger(file_name)
 
