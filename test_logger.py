@@ -48,7 +48,8 @@ class TestLogger(unittest.TestCase):
 
         # tests
         assert lines[0] == "0 infects 1\n"
-        vacc_message = "0 didn't infect 2 because they are already vaccinated\n"
+        vacc_message = (
+            "0 didn't infect 2 because they are already vaccinated\n")
         assert lines[1] == vacc_message
         assert lines[2] == "0 didn't infect 3 because they are already sick\n"
 
