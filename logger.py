@@ -1,5 +1,7 @@
 class Logger(object):
-    ''' Utility class responsible for logging all interactions during the simulation. '''
+    ''' Utility class responsible for logging all interactions during the
+        simulation.
+    '''
     # TODO: Write a test suite for this class to make sure each method is
     # working as expected.
 
@@ -7,18 +9,21 @@ class Logger(object):
     # test them one by one as you write your class.
 
     def __init__(self, file_name):
-        # TODO:  Finish this initialization method. The file_name passed should be the
-        # full file name of the file that the logs will be written to.
+        # TODO:  Finish this initialization method. The file_name passed should
+        # be the full file name of the file that the logs will be written to.
         self.file_name = file_name
 
-    def write_metadata(self, pop_size, vacc_percentage, virus_name, mortality_rate,
-                       basic_repro_num):
+    def write_metadata(self, pop_size, vacc_percentage, virus_name,
+                       mortality_rate, basic_repro_num):
         '''
-        The simulation class should use this method immediately to log the specific
-        parameters of the simulation as the first line of the file.
+        The simulation class should use this method immediately to log the
+        specific parameters of the simulation as the first line of the file.
         '''
         f = open(self.file_name, "w+")
-        f.write(f"Population size: {pop_size}\tVaccination percentage: {vacc_percentage}\tVirus name: {virus_name}\tMortality rate: {mortality_rate}\tBasic reproduction number: {basic_repro_num}\n")
+        f.write(f"Population size: {pop_size}\tVaccination percentage: " +
+                f"{vacc_percentage}\tVirus name: {virus_name}\t" +
+                f"Mortality rate: {mortality_rate}\t" +
+                f"Basic reproduction number: {basic_repro_num}\n")
         f.close()
 
     def log_interaction(self, person, random_person, random_person_sick=None,
@@ -27,19 +32,23 @@ class Logger(object):
         The Simulation object should use this method to log every interaction
         a sick person has during each time step.
 
-        The format of the log should be: "{person.ID} infects {random_person.ID} \n"
+        The format of the log should be:
+        "{person.ID} infects {random_person.ID} \n"
 
         or the other edge cases:
-            "{person.ID} didn't infect {random_person.ID} because {'vaccinated' or 'already sick'} \n"
+            "{person.ID} didn't infect {random_person.ID} because
+            {'vaccinated' or 'already sick'} \n"
         '''
         f = open(self.file_name, 'a')
         if did_infect and not random_person_vacc and not random_person_sick:
             f.write(f"{person._id} infects {random_person._id}\n")
         elif not did_infect:
             if random_person_sick:
-                f.write(f"{person._id} didn't infect {random_person._id} because they are already sick\n")
+                f.write(f"{person._id} didn't infect {random_person._id} " +
+                        "because they are already sick\n")
             elif random_person_vacc:
-                f.write(f"{person._id} didn't infect {random_person._id} because they are already vaccinated\n")
+                f.write(f"{person._id} didn't infect {random_person._id} " +
+                        "because they are already vaccinated\n")
         f.close()
 
     def log_infection_survival(self, person, did_die_from_infection):
@@ -47,7 +56,8 @@ class Logger(object):
         call of a Person object's .resolve_infection() method.
 
         The format of the log should be:
-            "{person.ID} died from infection\n" or "{person.ID} survived infection.\n"
+            "{person.ID} died from infection\n" or
+            "{person.ID} survived infection.\n"
         '''
         f = open(self.file_name, 'a')
         if did_die_from_infection:
@@ -61,25 +71,32 @@ class Logger(object):
                       died_this_step, cur_infected, total_dead):
         ''' STRETCH CHALLENGE DETAILS:
 
-        If you choose to extend this method, the format of the summary statistics logged
-        are up to you.
+        If you choose to extend this method, the format of the summary
+        statistics logged are up to you.
 
         At minimum, it should contain:
-            The number of people that were infected during this specific time step.
+            The number of people that were infected during this specific time
+                step.
             The number of people that died on this specific time step.
-            The total number of people infected in the population, including the newly infected
-            The total number of dead, including those that died during this time step.
+            The total number of people infected in the population, including
+                the newly infected.
+            The total number of dead, including those that died during this
+                time step.
 
         The format of this log should be:
-            "Time step {time_step_number} ended, beginning {time_step_number + 1}\n"
+            "Time step {time_step_number} ended,
+                beginning {time_step_number + 1}\n"
         '''
         f = open(self.file_name, 'a')
         f.write("- - - - - - - - - - - - - - - - - - - - - \n")
-        f.write(f"{infected_this_step} people were infected during TIME STEP {time_step_number}.\n")
-        f.write(f"{died_this_step} people died during TIME STEP {time_step_number}.\n")
+        f.write(f"{infected_this_step} people were infected during TIME STEP "
+                + f"{time_step_number}.\n")
+        f.write(f"{died_this_step} people died during TIME STEP " +
+                f"{time_step_number}.\n")
         f.write(f"{cur_infected} people are currently infected.\n")
         f.write(f"{total_dead} people died in total by far.\n")
-        f.write(f"TIME STEP {time_step_number} ended, beginning TIME STEP {time_step_number + 1}.\n")
+        f.write(f"TIME STEP {time_step_number} ended, beginning TIME STEP " +
+                f"{time_step_number + 1}.\n")
         f.write("- - - - - - - - - - - - - - - - - - - - - \n\n")
         f.close()
         # TODO: Finish this method. This method should log when a time step
