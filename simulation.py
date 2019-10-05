@@ -119,7 +119,14 @@ class Simulation(object):
             Returns:
                 bool: False for simulation should continue, True otherwise.
         '''
-        return self.total_dead + len([person for person in self.population if person.is_alive and person.is_vaccinated]) >= self.pop_size
+        # find the number of people who are both alive and vaccinated
+        alive_vacc_list = list()
+        for person in self.population:
+            if person.is_alive and person.is_vaccinated:
+                alive_vacc_list.append(person)
+        alive_vacc = len(alive_vacc_list)
+        # make decision
+        return self.total_dead + alive_vacc >= self.pop_size
 
     def run(self):
         ''' This method should run the simulation until all requirements for
@@ -261,8 +268,12 @@ if __name__ == "__main__":
     params = sys.argv[1:]
     pop_size = int(params[0])
     vacc_percentage = float(params[1])
-    assert vacc_percentage < 0.94, "Vaccination percentage too high. This will cause an infinite loop, because some people will not be included in the interactions."
+    # warn user if vacc_percentage too high
+    percent_msg = ("Vaccination percentage too high. This will cause an " +
+                   "infinite loop, because some people will not be included " +
+                   "in the interactions.")
     virus_name = str(params[2])
+    assert vacc_percentage < 0.94, percent_msg
     mortality_rate = float(params[3])
     repro_rate = float(params[4])
 
