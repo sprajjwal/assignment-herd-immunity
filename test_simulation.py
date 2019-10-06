@@ -50,6 +50,18 @@ class TestSimulation(unittest.TestCase):
                 count += 1
         assert count == len(alive_infected)
 
+    def test_get_alive(self):
+        """Test output of get_alive to ensure only contains alive people."""
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(1000, 0.05, virus)
+        alive = sim.get_alive()
+
+        count = 0
+        for person in alive:
+            if person.is_alive:
+                count += 1
+        assert count == len(alive)
+
 
 if __name__ == "__main__":
     unittest.main()
