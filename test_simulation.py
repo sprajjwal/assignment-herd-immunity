@@ -35,7 +35,20 @@ class TestSimulation(unittest.TestCase):
                                            "Virus name: HIV	Mortality rate: " +
                                            "0.3	Basic reproduction " +
                                            "number: 0.8\n")
-        test_file_no_arg.close()
+        test_file_no_arg.close
+
+    def test_get_infected(self):
+        """Test list returned by get_infected to ensure it only contains
+           people who are both alive and infected."""
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(1000, 0.05, virus)
+        alive_infected = sim.get_infected()  # stores value returned by method
+
+        count = 0
+        for person in alive_infected:
+            if person.infection and person.is_alive:
+                count += 1
+        assert count == len(alive_infected)
 
 
 if __name__ == "__main__":
