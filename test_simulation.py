@@ -44,11 +44,11 @@ class TestSimulation(unittest.TestCase):
         sim = Simulation(1000, 0.05, virus)
         alive_infected = sim.get_infected()  # stores value returned by method
 
-        count = 0
+        num_alive_infected = 0
         for person in alive_infected:
             if person.infection and person.is_alive:
-                count += 1
-        assert count == len(alive_infected)
+                num_alive_infected += 1
+        assert num_alive_infected == len(alive_infected)
 
     def test_get_alive(self):
         """Test output of get_alive to ensure only contains alive people."""
@@ -56,11 +56,27 @@ class TestSimulation(unittest.TestCase):
         sim = Simulation(1000, 0.05, virus)
         alive = sim.get_alive()
 
-        count = 0
+        num_alive = 0
         for person in alive:
             if person.is_alive:
-                count += 1
-        assert count == len(alive)
+                num_alive += 1
+        assert num_alive == len(alive)
+
+    def test_random_infected(self):
+        """Test output of random_infected to ensure all elements in
+           list are integer values."""
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(1000, 0.05, virus)
+        number_vaccinated = round(sim.vacc_percentage * sim.pop_size)
+        total = random.sample(range(sim.pop_size), number_vaccinated +
+                              sim.initial_infected)
+        random_infected = sim.random_infected(total)
+
+        num_infected = 0
+        for index in random_infected:
+            if type(index) is int:
+                num_infected += 1
+        assert num_infected == len(random_infected)
 
 
 if __name__ == "__main__":

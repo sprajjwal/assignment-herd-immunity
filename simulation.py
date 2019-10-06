@@ -43,7 +43,7 @@ class Simulation(object):
         #   attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.population = []  # Dictionary of Person objects
+        self.population = []  # List of Person objects
         self.pop_size = pop_size  # Int
         self.next_person_id = pop_size  # Int
         self.virus = virus  # Virus object
@@ -79,7 +79,7 @@ class Simulation(object):
         return alive
 
     def random_infected(self, total):
-        """Return a list of infected persons chosen randomly."""
+        """Return a list of indices of people to vaccinate."""
         random_infected = [
             total.pop(random.randint(0, len(total)-1)
                       ) for i in range(self.initial_infected)
