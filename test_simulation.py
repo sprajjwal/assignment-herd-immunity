@@ -78,6 +78,60 @@ class TestSimulation(unittest.TestCase):
                 num_infected += 1
         assert num_infected == len(random_infected)
 
+    def test_create_population(self):
+        """Test to be sure:
+          1. the appropiate amount of people in population are vaccinated,
+          2. infected,
+          3. the rest are neither,
+          4. and all are alive,
+          5. and the population is the right size.
+        """
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(1000, 0.05, virus)
+
+        sim_population = sim.population
+        # bools to store that each condition is being met
+        pop_size_condition = False
+        alive_size = False
+        vacc_size = False
+        infect_size = False
+        neither = False
+        # decisions that can change bools to True
+        if len(sim_population) == sim.pop_size:
+            pop_size_condition = True
+
+        alive_list = sim.get_alive()
+        if len(alive_list) == len(sim_population):
+            alive_size = True
+
+        vacc_num = 0
+        for person in sim_population:
+            if person.is_vaccinated:
+                vacc_num += 1
+        if vacc_num == sim.vacc_percentage * len(sim_population):
+            vacc_size = True
+
+        infected_num = 0
+        for person in sim_population:
+            if person.infection:
+                infected_num += 1
+        if len(sim.get_infected()) == infected_num:
+            infect_size = True
+
+        neither_count = 0
+        for person in sim_population:
+            if not person.infection and not person.is_vaccinated:
+                neither_count += 1
+        if neither_count == (len(sim_population) - infected_num - vacc_num):
+            neither = True
+
+        # asserting that bools came out True
+        assert pop_size_condition is True
+        assert alive_size is True
+        assert vacc_size is True
+        assert infect_size is True
+        assert neither is True
+
 
 if __name__ == "__main__":
     unittest.main()
