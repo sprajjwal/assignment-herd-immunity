@@ -137,9 +137,10 @@ class TestSimulation(unittest.TestCase):
         # Test scenarios that should cause simulation to continue
         # Scenario 1: just after 1 time step with HIV virus
         virus = Virus("HIV", 0.8, 0.3)
-        sim = Simulation(200, 0.05, virus)
+        sim = Simulation(2000, 0.5, virus)
+        assert sim._simulation_should_continue() is False
         sim.run()
-        assert sim.run()[0] == sim.run()[1]
+        assert sim._simulation_should_continue() is True#True
 
         # Test scenarios that should cause simulation to end
         # Scenario 1: kill everyone
@@ -156,6 +157,7 @@ class TestSimulation(unittest.TestCase):
             person.is_vaccinated = True
         sim.total_dead = 0
         assert sim._simulation_should_continue() is True
+
 
 
 if __name__ == "__main__":

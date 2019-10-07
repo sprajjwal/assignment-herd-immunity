@@ -144,12 +144,12 @@ class Simulation(object):
             # create a list of alive persons
             alive = self.get_alive()
             # create a list of vaccinated persons
-            vaccinated = list()
+            vaccinated = []
             for person in self.population:
                 if person in alive and person.is_vaccinated:
                     vaccinated.append(person)
             # create a list of uninfected persons
-            uninfected = list()
+            uninfected = []
             for person in alive:
                 if person not in vaccinated and person.infection:
                     uninfected.append(person)
@@ -165,7 +165,6 @@ class Simulation(object):
 
             time_step_counter += 1
         print(f'The simulation has ended after {time_step_counter} turns.', )
-        return list([simulation_should_continue, time_step_counter])
 
     def time_step(self, time_step_counter):
         ''' This method should contain all the logic for computing
