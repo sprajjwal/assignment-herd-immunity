@@ -132,6 +132,31 @@ class TestSimulation(unittest.TestCase):
         assert infect_size is True
         assert neither is True
 
+    def test_simulation_should_continue(self):
+        """Test decision returned by _simulation_should_continue."""
+        # Test scenarios that should cause simulation to continue
+        # Scenario 1: just after 1 time step with HIV virus
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(200, 0.05, virus)
+        sim.run()
+        assert sim.run()[0] == sim.run()[1]
+
+        # Test scenarios that should cause simulation to end
+        # Scenario 1: kill everyone
+        for person in sim.population:
+            person.is_alive = False
+            sim.total_dead += 1
+            person.is_vaccinated = False
+        assert sim._simulation_should_continue() is True
+
+        # Scenario 2: vaccinate everyone
+        for person in sim.population:
+            person.is_alive = True
+            person.infection = None
+            person.is_vaccinated = True
+        sim.total_dead = 0
+        assert sim._simulation_should_continue() is True
+
 
 if __name__ == "__main__":
     unittest.main()

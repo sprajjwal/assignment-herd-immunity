@@ -119,11 +119,10 @@ class Simulation(object):
                 bool: False for simulation should continue, True otherwise.
         '''
         # find the number of people who are both alive and vaccinated
-        alive_vacc_list = list()
+        alive_vacc = 0
         for person in self.population:
             if person.is_alive and person.is_vaccinated:
-                alive_vacc_list.append(person)
-        alive_vacc = len(alive_vacc_list)
+                alive_vacc += 1
         # make decision
         return self.total_dead + alive_vacc >= self.pop_size
 
@@ -132,6 +131,7 @@ class Simulation(object):
             ending the simulation are met.
         '''
         time_step_counter = 1
+        simulation_should_continue = 0
         should_continue = None
 
         assert self.population[0]._id == 0
@@ -160,10 +160,12 @@ class Simulation(object):
                   f"total vaccinated: {len(vaccinated)}, " +
                   f"alive: {len(alive)}, uninfected: {len(uninfected)}")
             if self._simulation_should_continue():
+                simulation_should_continue += 1
                 break
 
             time_step_counter += 1
         print(f'The simulation has ended after {time_step_counter} turns.', )
+        return list([simulation_should_continue, time_step_counter])
 
     def time_step(self, time_step_counter):
         ''' This method should contain all the logic for computing
