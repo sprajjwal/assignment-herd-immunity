@@ -35,7 +35,7 @@ class TestSimulation(unittest.TestCase):
                                            "Virus name: HIV	Mortality rate: " +
                                            "0.3	Basic reproduction " +
                                            "number: 0.8\n")
-        test_file_no_arg.close
+        test_file_no_arg.close()
 
     def test_get_infected(self):
         """Test list returned by get_infected to ensure it only contains
