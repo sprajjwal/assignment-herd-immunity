@@ -4,19 +4,23 @@ from pylab import *
 plt.rcdefaults()
 
 '''
-Info for using matplotlib and numpy came from these tutorials:
-https://towardsdatascience.com/5-quick-and-easy-data-visualizations-in-python-
-with-code-a2284bae952f
-
+Info for using matplotlib and numpy came from this tutorials:
 https://pythonspot.com/matplotlib-bar-chart/
 '''
 
 
 class Visualizer:
-    def __init__(self):
-        pass
+    def __init__(self, y_label, title):
+        """Set up object."""
+        self.y_label = y_label
+        self.x_label = ""
+        self.title = title
 
-    def bar_graph(self, y_label, x_label, title):
+    def set_x_label(self, time_step):
+        """Define x_label for bar graph every time step."""
+        self.x_label = f'Population Sizes During Time Step {time_step}'
+
+    def bar_graph(self, time_step):
         """Plot a bar histogram showing numbers of alive people who are
            either vaccinated, infected, or neither during one time step.
         """
@@ -25,12 +29,25 @@ class Visualizer:
         num_alive = [10, 40, 70]
         plt.bar(y_pos, num_alive, align='center', alpha=0.5)
         plt.xticks(y_pos, populations)
-        plt.ylabel(y_label)
-        plt.xlabel(x_label)
-        plt.title(title)
+        plt.ylabel(self.y_label)
+        self.set_x_label(time_step)
+        plt.xlabel(self.x_label)
+        plt.title(self.title)
 
         plt.show()
 
+
+if __name__ == "__main__":
+    graph = Visualizer("Number of Survivors",
+                       "Populations in Simulation",
+                       ("Herd Immunity Defense Against Disease " +
+                        "Spread"))
+    graph.bar_graph()
+
+    # 5, 2, "Populations", "Number of Survivors",
+    # "Herd Immunity Defense Against Disease Spread", False)
+    # graph.lineplot(arange(5), arange(5), "Number of Days",
+    #                 "Number of Survivors", "Herd Immunity Simulation")
     """
         # def histogram(self, data, n_bins, x_label,
         # y_label, title, cumulative):
@@ -64,13 +81,3 @@ class Visualizer:
 
         plt.show()
     """
-
-
-if __name__ == "__main__":
-    graph = Visualizer()
-    graph.bar_graph("Number of Survivors", "Populations in Simulation",
-                    "Herd Immunity Defense Against Disease Spread")
-    # 5, 2, "Populations", "Number of Survivors",
-    # "Herd Immunity Defense Against Disease Spread", False)
-    # graph.lineplot(arange(5), arange(5), "Number of Days",
-    #                 "Number of Survivors", "Herd Immunity Simulation")
