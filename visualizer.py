@@ -33,16 +33,17 @@ class Visualizer:
         self.set_x_label(time_step)
         plt.xlabel(self.x_label)
         plt.title(self.title)
-
+        # show graph for 5 seconds, then close
         plt.show()
+        plt.pause(5)
+        plt.close()
 
 
 if __name__ == "__main__":
     graph = Visualizer("Number of Survivors",
-                       "Populations in Simulation",
                        ("Herd Immunity Defense Against Disease " +
                         "Spread"))
-    graph.bar_graph()
+    graph.bar_graph(1)
 
     # 5, 2, "Populations", "Number of Survivors",
     # "Herd Immunity Defense Against Disease Spread", False)
