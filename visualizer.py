@@ -34,7 +34,7 @@ class Visualizer:
         plt.xlabel(self.x_label)
         plt.title(self.title)
         # show graph for 5 seconds, then close
-        plt.show()
+        plt.show(block=False)
         plt.pause(5)
         plt.close()
 
