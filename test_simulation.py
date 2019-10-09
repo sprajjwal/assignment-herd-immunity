@@ -6,6 +6,7 @@ from logger import Logger
 from virus import Virus
 from simulation import *
 
+
 random.seed(42)
 
 
@@ -138,9 +139,12 @@ class TestSimulation(unittest.TestCase):
         # Scenario 1: just after 1 time step with HIV virus
         virus = Virus("HIV", 0.8, 0.3)
         sim = Simulation(2000, 0.5, virus)
+        graph = visualizer.Visualizer("Number of Survivors",
+                                      ("Herd Immunity Defense Against Disease "
+                                       + "Spread"))
         assert sim._simulation_should_continue() is False
-        sim.run()
-        assert sim._simulation_should_continue() is True#True
+        sim.run(graph)
+        assert sim._simulation_should_continue() is True  # True
 
         # Test scenarios that should cause simulation to end
         # Scenario 1: kill everyone
@@ -158,6 +162,33 @@ class TestSimulation(unittest.TestCase):
         sim.total_dead = 0
         assert sim._simulation_should_continue() is True
 
+    def test_get_alive_num(self):
+        """Test the get_alive_num method."""
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(2000, 0.5, virus)
+
+        alive_num = sim.get_alive_num()
+        assert alive_num == sim.pop_size
+
+    def test_get_neither(self):
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(2000, 0.5, virus)
+
+        # find number of alive people not vaccinated or infected
+        neither = 0
+        for person in sim.population:
+            if person.is_alive:
+                if not person.infection and not person.is_vaccinated:
+                    neither += 1
+        assert neither == sim.get_neither()
+
+    def test_get_dead(self):
+        """Test the get_dead method."""
+        virus = Virus("HIV", 0.8, 0.3)
+        sim = Simulation(2000, 0.5, virus)
+
+        dead_num = sim.get_dead()
+        assert dead_num == 0
 
 
 if __name__ == "__main__":

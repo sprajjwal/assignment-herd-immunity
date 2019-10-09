@@ -139,8 +139,9 @@ class Simulation(object):
         """Return the number of alive people who are neither vaccinated nor
            infected."""
         neither = 0
-        for person in self.population:
-            if person.is_alive and not person.infection and not person.is_vaccinated:
+        alive = self.get_alive()
+        for person in alive:
+            if not person.infection and not person.is_vaccinated:
                 neither += 1
         return neither
 
