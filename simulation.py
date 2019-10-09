@@ -127,9 +127,35 @@ class Simulation(object):
         # make decision
         return self.total_dead + alive_vacc >= self.pop_size
 
-    def run(self):
+    def get_alive_num(self):
+        """Return the number of alive people in the population."""
+        alive_num = 0
+        for person in self.population:
+            if person.is_alive:
+                alive_num += 1
+        return alive_num
+
+    def get_neither(self):
+        """Return the number of alive people who are neither vaccinated nor
+           infected."""
+        neither = 0
+        for person in self.population:
+            if person.is_alive and not person.infection and not person.is_vaccinated:
+                neither += 1
+        return neither
+
+    def get_dead(self):
+        """Return number of dead people."""
+        dead = 0
+        for person in self.population:
+            if not person.is_alive:
+                dead += 1
+        return dead
+
+    def run(self, visualizer):
         ''' This method should run the simulation until all requirements for
             ending the simulation are met.
+            Param: visualizer is Visualizer object
         '''
         time_step_counter = 1
         simulation_should_continue = 0
@@ -140,6 +166,7 @@ class Simulation(object):
               f"current infected: {self.current_infected}, " +
               f"vaccinated percentage: {self.vacc_percentage}, " +
               f"dead: {self.total_dead}")
+
         while True:
             self.time_step(time_step_counter)
             # create a list of alive persons
@@ -160,12 +187,17 @@ class Simulation(object):
                   f"{self.vacc_percentage}, dead: {self.total_dead},  " +
                   f"total vaccinated: {len(vaccinated)}, " +
                   f"alive: {len(alive)}, uninfected: {len(uninfected)}")
+            visualizer.bar_graph(time_step_counter,
+                                 self.vacc_percentage * self.get_alive_num(),
+                                 self.current_infected,
+                                 self.get_dead(),
+                                 self.get_neither())
             if self._simulation_should_continue():
                 simulation_should_continue += 1
                 break
 
             time_step_counter += 1
-        print(f'The simulation has ended after {time_step_counter} turns.', )
+        print(f'The simulation has ended after {time_step_counter} turns.',)
 
     def time_step(self, time_step_counter):
         ''' This method should contain all the logic for computing
@@ -289,4 +321,4 @@ if __name__ == "__main__":
                                   ("Herd Immunity Defense Against Disease " +
                                    "Spread"))
 
-    sim.run()
+    sim.run(graph)

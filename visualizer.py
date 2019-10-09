@@ -20,13 +20,13 @@ class Visualizer:
         """Define x_label for bar graph every time step."""
         self.x_label = f'Population Sizes During Time Step {time_step}'
 
-    def bar_graph(self, time_step):
+    def bar_graph(self, time_step, vacc, infected, dead, neither):
         """Plot a bar histogram showing numbers of alive people who are
            either vaccinated, infected, or neither during one time step.
         """
-        populations = ["Vaccinated", "Infected", "Neither"]
+        populations = ["Vaccinated", "Infected", "Dead", "Neither"]
         y_pos = np.arange(len(populations))
-        num_alive = [10, 40, 70]
+        num_alive = [vacc, infected, dead, neither]
         plt.bar(y_pos, num_alive, align='center', alpha=0.5)
         plt.xticks(y_pos, populations)
         plt.ylabel(self.y_label)
@@ -36,7 +36,7 @@ class Visualizer:
         # show graph for 5 seconds, then close
         plt.show(block=False)
         plt.pause(5)
-        plt.close()
+        # plt.close()
 
 
 if __name__ == "__main__":
