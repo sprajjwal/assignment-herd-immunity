@@ -193,7 +193,6 @@ class Simulation(object):
                     dead_this_step += 1
                     self.total_dead += 1
                 self.current_infected -= 1
-        # dead_this_step = self.kill_or_vaccinate()
         infected_this_step = self._infect_newly_infected()
         self.logger.log_time_step(time_step_counter, infected_this_step,
                                   dead_this_step, self.total_infected,
