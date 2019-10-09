@@ -3,6 +3,7 @@ import sys
 from person import Person
 from logger import Logger
 from virus import Virus
+import visualizer
 random.seed(42)
 
 
@@ -261,5 +262,8 @@ if __name__ == "__main__":
 
     virus = Virus(virus_name, repro_rate, mortality_rate)
     sim = Simulation(pop_size, vacc_percentage,  virus, initial_infected)
+    graph = visualizer.Visualizer("Number of Survivors",
+                                  ("Herd Immunity Defense Against Disease " +
+                                   "Spread"))
 
     sim.run()
