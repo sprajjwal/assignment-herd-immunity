@@ -213,13 +213,19 @@ class Simulation(object):
             3. Otherwise call simulation.interaction(person, random_person) and
                 increment interaction counter by 1.
             '''
+        dead_this_step = 0
         for person in self.population:
             if person.infection and person.is_alive:
                 sampling = random.sample(self.get_alive(person._id), 100)
                 interaction_sample = sampling
                 for random_person in interaction_sample:
                     self.interaction(person, random_person)
-        dead_this_step = self.kill_or_vaccinate()
+                did_survive = person.did_survive_infection()
+                self.logger.log_infection_survival(person, did_survive)
+                if not did_survive:
+                    dead_this_step += 1
+                    self.total_dead += 1
+                self.current_infected -= 1
         infected_this_step = self._infect_newly_infected()
         self.logger.log_time_step(time_step_counter, infected_this_step,
                                   dead_this_step, self.total_infected,
@@ -255,35 +261,6 @@ class Simulation(object):
                 self.logger.log_interaction(person, random_person,
                                             did_infect=True)
 
-    def kill_or_vaccinate(self):
-        '''Kills infected people based on Virus' mortality rate'''
-        # Create a list of the infected persons' ids
-        infected_ids = list()
-        for person in self.population:
-            if person.infection and person.is_alive:
-                infected_ids.append(person._id)
-
-        total_vaccinated = 0
-        alive = 0
-        dead = 0
-        for person in self.population:
-            if (person.is_alive and person.infection and
-               person._id not in self.newly_infected):
-                if not person.did_survive_infection():  # kill
-                    self.total_dead += 1
-                    dead += 1
-                    self.logger.log_infection_survival(person, True)
-                else:
-                    self.logger.log_infection_survival(person, False)
-                self.current_infected -= 1
-            if person.is_vaccinated and person.is_alive:
-                total_vaccinated += 1
-            if person.is_alive:
-                alive += 1
-
-        self.vacc_percentage = total_vaccinated/alive
-        return dead
-
     def _infect_newly_infected(self):
         ''' This method should iterate through the list of ._id stored in
             self.newly_infected
@@ -306,7 +283,7 @@ if __name__ == "__main__":
                    "infinite loop, because some people will not be included " +
                    "in the interactions.")
     virus_name = str(params[2])
-    # assert vacc_percentage < 0.94, percent_msg
+    assert vacc_percentage < 0.94, percent_msg
     mortality_rate = float(params[3])
     repro_rate = float(params[4])
 
