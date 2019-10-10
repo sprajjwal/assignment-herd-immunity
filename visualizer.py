@@ -24,7 +24,7 @@ class Visualizer:
         """Plot a bar histogram showing numbers of alive people who are
            either vaccinated, infected, or neither during one time step.
         """
-        populations = ["Vaccinated", "Infected", "Dead", "Neither"]
+        populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
         y_pos = np.arange(len(populations))
         num_alive = [vacc, infected, dead, neither]
         plt.bar(y_pos, num_alive, align='center', alpha=0.5)

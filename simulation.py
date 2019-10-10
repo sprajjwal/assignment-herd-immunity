@@ -48,7 +48,7 @@ class Simulation(object):
         self.pop_size = pop_size  # Int
         self.next_person_id = pop_size  # Int
         self.virus = virus  # Virus object
-        self.initial_infected = self.current_infected = initial_infected  # Int
+        self.initial_infected = initial_infected  # Int
         self.total_infected = 0  # Int
         self.vacc_percentage = vacc_percentage  # float between 0 and 1
         self.total_dead = 0  # Int
@@ -125,7 +125,8 @@ class Simulation(object):
             if person.is_alive and person.is_vaccinated:
                 alive_vacc += 1
         # make decision
-        return self.total_dead + alive_vacc >= self.pop_size
+        return (self.total_dead + alive_vacc + self.get_neither() >=
+                self.pop_size)
 
     def get_alive_num(self):
         """Return the number of alive people in the population."""
@@ -164,7 +165,7 @@ class Simulation(object):
 
         assert self.population[0]._id == 0
         print(f"Time step 0, Total infected: {self.total_infected}, " +
-              f"current infected: {self.current_infected}, " +
+              f"current infected: {self.current_infected()}, " +
               f"vaccinated percentage: {self.vacc_percentage}, " +
               f"dead: {self.total_dead}")
 
@@ -184,13 +185,14 @@ class Simulation(object):
                     uninfected.append(person)
             print(f"Time step: {time_step_counter}, " +
                   f"total infected: {self.total_infected}, " +
-                  f"current infected: {self.current_infected} vaccinated %: " +
-                  f"{self.vacc_percentage}, dead: {self.total_dead},  " +
+                  f"current infected: {self.current_infected()} vaccinated %: "
+                  + f"{self.vacc_percentage}, dead: {self.total_dead},  " +
                   f"total vaccinated: {len(vaccinated)}, " +
-                  f"alive: {len(alive)}, uninfected: {len(uninfected)}")
+                  f"alive: {len(alive)}, uninfected: {len(uninfected)} " +
+                  f"uninteracted {self.get_neither()}")
             visualizer.bar_graph(time_step_counter,
                                  self.vacc_percentage * self.get_alive_num(),
-                                 self.current_infected,
+                                 self.current_infected(),
                                  self.get_dead(),
                                  self.get_neither())
             if self._simulation_should_continue():
@@ -226,11 +228,18 @@ class Simulation(object):
                 if not did_survive:
                     dead_this_step += 1
                     self.total_dead += 1
-                self.current_infected -= 1
+                # self.current_infected -= 1
         infected_this_step = self._infect_newly_infected()
         self.logger.log_time_step(time_step_counter, infected_this_step,
                                   dead_this_step, self.total_infected,
                                   self.total_dead)
+
+    def current_infected(self):
+        inf = 0
+        for person in self.population:
+            if person.infection and person.is_alive:
+                inf += 1
+        return inf
 
     def interaction(self, person, random_person):
         '''This method should be called any time two living people are selected
@@ -258,7 +267,7 @@ class Simulation(object):
                 random_person.infection = self.virus
                 self.newly_infected.append(random_person._id)
                 self.total_infected += 1
-                self.current_infected += 1
+                # self.current_infected += 1
                 self.logger.log_interaction(person, random_person,
                                             did_infect=True)
 
@@ -279,12 +288,7 @@ if __name__ == "__main__":
     params = sys.argv[1:]
     pop_size = int(params[0])
     vacc_percentage = float(params[1])
-    # warn user if vacc_percentage too high
-    percent_msg = ("Vaccination percentage too high. This will cause an " +
-                   "infinite loop, because some people will not be included " +
-                   "in the interactions.")
     virus_name = str(params[2])
-    assert vacc_percentage < 0.94, percent_msg
     mortality_rate = float(params[3])
     repro_rate = float(params[4])
 
