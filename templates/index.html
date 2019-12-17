@@ -5,14 +5,32 @@
 
 {% block content %}
 
-<h1>Herd Immunity Simulation</h1>
+<div class="row">
+    <div class="col-md-6">
+        <!-- display form -->
+        <h1>Herd Immunity Simulation</h1>
 
-<p>Enter in values for the parameters below. <br>
-   Will your population be able to survive the outbreak?
-</p>
+        <h3>Please fill out the form below.</h3>
 
-<form class="form-group" action="/" method="POST">
-    
-</form>
+        <p>
+            <i>
+                Is our population ready for the outbreak?
+            </i>
+        </p>
+
+        <form class="form-group" action="/" method="POST">
+            Population size?<input name="pop_size" type="text" class="form-group-control"><br>
+            Percentage vaccinated?<input name="vacc_percentage" type="text" class="form-group-control"><br>
+            Name of virus?<input name="virus_name" type="text" class="form-group-control"><br>
+            Mortality rate?<input name="mortality_rate" type="text" class="form-group-control"><br>
+            Reproduction rate (of the virus?)<input name="repro_rate" type="text" class="form-group-control"><br><br>
+            <input type="submit" class="btn btn-primary" value="See it Play Out!">
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <!-- display cool graphic image -->
+    </div>
+</div>
 
 {% endblock %}
