@@ -283,6 +283,71 @@ class Simulation(object):
         self.newly_infected = []
         return infected_this_time
 
+    def run_and_collect(self, visualizer):
+        """This method should run the simulation until all requirements for
+           ending the simulation are met.
+
+           Parameters:
+           visualizer(Visualizer): constrcuts bar graph using matplotlib
+
+           Returns:
+           list: an array of the bar graphs for each step
+                 arranged in tuples: contains both the graph and its terminal
+                                     output (str)
+        """
+        results = list()  # stores graphs and terminal output
+        time_step_counter = 1
+        simulation_should_continue = 0
+        should_continue = None
+
+        assert self.population[0]._id == 0
+        init_report = (f"Time step 0, Total infected: {self.total_infected}, "
+                       + f"current infected: {self.current_infected()}, " +
+                         f"vaccinated percentage: {self.vacc_percentage}, " +
+                         f"dead: {self.total_dead}")
+        results.append(init_report)
+
+        while True:
+            self.time_step(time_step_counter)
+            # create a list of alive persons
+            alive = self.get_alive()
+            # create a list of vaccinated persons
+            vaccinated = []
+            for person in self.population:
+                if person in alive and person.is_vaccinated:
+                    vaccinated.append(person)
+            # create a list of uninfected persons
+            uninfected = []
+            for person in alive:
+                if person not in vaccinated and person.infection:
+                    uninfected.append(person)
+            # store the terminal output in a str
+            step_report = (f"Time step: {time_step_counter}, " +
+                           f"total infected: {self.total_infected}, " +
+                           f"current infected: {self.current_infected()} vaccinated %: "
+                           + f"{self.vacc_percentage}, dead: {self.total_dead},  " +
+                           f"total vaccinated: {len(vaccinated)}, " +
+                           f"alive: {len(alive)}, uninfected: {len(uninfected)} " +
+                           f"uninteracted {self.get_neither()}")
+            visual = visualizer.show_graph(time_step_counter,
+                                           self.vacc_percentage * self.get_alive_num(),
+                                           self.current_infected(),
+                                           self.get_dead(),
+                                           self.get_neither())
+            # associate the str and graph for this step
+            group_report = (step_report, visual)
+            results.append(group_report)
+            # decide to continue
+            if self._simulation_should_continue():
+                simulation_should_continue += 1
+                break
+
+            time_step_counter += 1
+            final_report = (f'The simulation has ended after' +
+                            f'{time_step_counter} turns.',)
+            results.append(final_report)
+        return results
+
 
 if __name__ == "__main__":
     params = sys.argv[1:]
@@ -303,4 +368,4 @@ if __name__ == "__main__":
                                   ("Herd Immunity Defense Against Disease " +
                                    "Spread"))
 
-    sim.run(graph)
+    sim.run_and_collect(graph)
