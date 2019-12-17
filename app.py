@@ -12,7 +12,14 @@ graph = visualizer.Visualizer("Number of Survivors",
 @app.route("/", methods=['GET', 'POST'])
 def simulation_params():
     '''User sees a form to input the parameters of the simulation.'''
-    pass
+    if request.method == 'GET':
+        # render the form to input data
+        pass
+    if request.method == 'POST':
+        # run the simulation
+
+        # redirect to the template for results
+        pass
 
 
 @app.route("/simulation", methods=['GET'])
