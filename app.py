@@ -13,8 +13,14 @@ import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import random
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
+list_of_sim = list()
+client = MongoClient()
+db = client.Herd
+simulations = db.simulations
 
 
 @app.route("/", methods=['GET'])
@@ -53,9 +59,9 @@ def create_graphs(simulation):
     '''
 
 
-@app.route('/calculations', methods=['POST'])
+@app.route('/calculations', methods=['GET', 'POST'])
 def construct_simulation():
-    # make a graph to be shown on the next use case
+    # POST: set up the Simulation
     if request.method == 'POST':
         # use data from user
         pop_size = int(request.form.get("pop_size"))
@@ -67,11 +73,18 @@ def construct_simulation():
         initial_infected = int(request.form.get("initial_infected"))
         simulator = Simulation(pop_size, vacc_percentage,  virus,
                                initial_infected)
+        list_of_sim.append(simulator)
+        # list_of_sim = []
+        # list_of_sim.append(simulator)
+        # simulation = {'simulator': list_of_sim}
+        # insert into db
+        # sim_id = simulations.insert_one(simulation).inserted_id
         print(f'Simulation: {simulator}')
         # run the simulation
         # results = sim.run_and_collect(graph)
         # redirect to the template for results, giving user the download
-        return redirect(url_for('show_results', sim=simulator))
+        return redirect(url_for('show_results',
+                                sim_id=list_of_sim.index(simulator)))
 
 
 """
@@ -87,10 +100,11 @@ def make_graphs():
 """
 
 
-@app.route("/simulation/<sim>")
-def show_results(sim):
+@app.route("/simulation/<sim_id>")
+def show_results(sim_id):
     '''Show the steps of the simulation. Present png image to user.'''
-    # show the image in the results template
+    # GET: show the image in the results template
+    sim = list_of_sim[int(sim_id)]
     graphs = create_graphs(sim)
     results = list()  # stores Response object for each graph
     for tuple in graphs:
