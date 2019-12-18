@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
+import io
 import numpy as np
 from pylab import *
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib.figure import Figure
 plt.rcdefaults()
 
 '''
@@ -39,9 +43,11 @@ class Visualizer:
         # plt.close()
 
     def show_graph(self, time_step, vacc, infected, dead, neither):
-        """Return a graph that shows this time step. Will be used in
-           the web UI.
+        """Return a graph that shows this time step.
+           Optimized to work in the web UI.
+
         """
+        pp = PdfPages('multipage.pdf')
         populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
         y_pos = np.arange(len(populations))
         num_alive = [vacc, infected, dead, neither]
@@ -51,6 +57,8 @@ class Visualizer:
         self.set_x_label(time_step)
         plt.xlabel(self.x_label)
         plt.title(self.title)
+        # save the figure as a pdf
+        plt.savefig(pp, format='pdf')
         return plt
 
 
