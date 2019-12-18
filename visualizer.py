@@ -4,7 +4,6 @@ import numpy as np
 from pylab import *
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.figure import Figure
 plt.rcdefaults()
 
 '''
@@ -47,7 +46,8 @@ class Visualizer:
            Optimized to work in the web UI.
 
         """
-        pp = PdfPages('multipage.pdf')
+        # pp = PdfPages('multipage.pdf')
+        fig = plt.figure.Figure()
         populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
         y_pos = np.arange(len(populations))
         num_alive = [vacc, infected, dead, neither]
@@ -58,7 +58,7 @@ class Visualizer:
         plt.xlabel(self.x_label)
         plt.title(self.title)
         # save the figure as a pdf
-        plt.savefig(pp, format='pdf')
+        # plt.savefig(pp, format='pdf')
         return plt
 
 

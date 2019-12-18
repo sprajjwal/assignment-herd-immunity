@@ -15,6 +15,7 @@ from matplotlib.figure import Figure
 import random
 
 app = Flask(__name__)
+sim = None  # later initialized as a Simulation
 graph = Visualizer("Number of Survivors", (
                     "Herd Immunity Defense Against Disease " +
                     "Spread"))
@@ -28,9 +29,9 @@ def simulation_params():
         return render_template("index.html")
 
 
-def create_graph():
+def create_graph(simulation):
     """Construct png images from the list returned by running the
-       simulation.
+       simulation. Uses the Visualizer object ran by the Simulation object.
 
        Parameters:
        simulation(Simulation): initialized using form values
@@ -50,7 +51,7 @@ def create_graph():
 
 
 @app.route('/calculations', methods=['POST'])
-def run_the_sim():
+def construct_simulation():
     # make a graph to be shown on the next use case
     if request.method == 'POST':
         # use data from user
@@ -72,7 +73,7 @@ def run_the_sim():
 def make_graphs():
     '''Produce the figure shown in the template.'''
     # show the image in the results template
-    fig = create_graph()
+    fig = create_graph(sim)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     response = Response(output.getvalue(), mimetype='image/png')
