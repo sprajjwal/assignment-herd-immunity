@@ -26,20 +26,6 @@ def simulation_params():
     if request.method == 'GET':
         # render the form to input data
         return render_template("index.html")
-    if request.method == 'POST':
-        # use data from user
-        pop_size = int(request.form.get("pop_size"))
-        vacc_percentage = float(request.form.get("vacc_percentage"))
-        virus_name = request.form.get("virus_name")
-        mort_rate = float(request.form.get("mortality_rate"))
-        repro_rate = float(request.form.get("repro_rate"))
-        virus = Virus(virus_name, repro_rate, mort_rate)
-        initial_infected = int(request.form.get("initial_infected"))
-        sim = Simulation(pop_size, vacc_percentage,  virus, initial_infected)
-        # run the simulation
-        results = sim.run_and_collect(graph)
-        # redirect to the template for results, giving user the download
-        return redirect(url_for('show_results'))
 
 
 def create_graph():
@@ -63,8 +49,27 @@ def create_graph():
     return fig
 
 
-@app.route("/figure", methods=['GET', 'POST'])
-def make_results():
+@app.route('/calculations', methods=['POST'])
+def run_the_sim():
+    # make a graph to be shown on the next use case
+    if request.method == 'POST':
+        # use data from user
+        pop_size = int(request.form.get("pop_size"))
+        vacc_percentage = float(request.form.get("vacc_percentage"))
+        virus_name = request.form.get("virus_name")
+        mort_rate = float(request.form.get("mortality_rate"))
+        repro_rate = float(request.form.get("repro_rate"))
+        virus = Virus(virus_name, repro_rate, mort_rate)
+        initial_infected = int(request.form.get("initial_infected"))
+        sim = Simulation(pop_size, vacc_percentage,  virus, initial_infected)
+        # run the simulation
+        # results = sim.run_and_collect(graph)
+        # redirect to the template for results, giving user the download
+        return redirect(url_for('show_results'))
+
+
+@app.route("/figure")
+def make_graphs():
     '''Produce the figure shown in the template.'''
     # show the image in the results template
     fig = create_graph()
@@ -72,9 +77,6 @@ def make_results():
     FigureCanvas(fig).print_png(output)
     response = Response(output.getvalue(), mimetype='image/png')
     return response
-    # make a graph to be shown on the next use case
-    if request.method == 'POST':
-        pass
 
 
 @app.route("/simulation", methods=['GET'])
