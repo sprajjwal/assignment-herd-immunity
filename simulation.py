@@ -305,7 +305,7 @@ class Simulation(object):
                        + f"current infected: {self.current_infected()}, " +
                          f"vaccinated percentage: {self.vacc_percentage}, " +
                          f"dead: {self.total_dead}")
-        results.append(init_report)
+        results.append((init_report,))
 
         while True:
             self.time_step(time_step_counter)
@@ -340,12 +340,12 @@ class Simulation(object):
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
+                final_report = (f'The simulation has ended after ' +
+                                f'{time_step_counter} turns.',)
+                results.append(final_report)
                 break
 
             time_step_counter += 1
-            final_report = (f'The simulation has ended after' +
-                            f'{time_step_counter} turns.',)
-            results.append(final_report)
         return results
 
 
@@ -368,4 +368,4 @@ if __name__ == "__main__":
                                   ("Herd Immunity Defense Against Disease " +
                                    "Spread"))
 
-    sim.run_and_collect(graph)
+    print(sim.run_and_collect(graph))

@@ -47,7 +47,7 @@ class Visualizer:
 
         """
         # pp = PdfPages('multipage.pdf')
-        fig = plt.figure.Figure()
+        fig = plt.figure()
         populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
         y_pos = np.arange(len(populations))
         num_alive = [vacc, infected, dead, neither]

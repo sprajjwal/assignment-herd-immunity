@@ -40,6 +40,8 @@ def create_graph(simulation):
        Response: imported from flask library
 
     """
+    # run the sim,ulation, get a list of bar graphs
+    '''
     # inspired by
     # https://stackoverflow.com/questions/50728328/python-how-to-show-matplotlib-in-flask
     fig = Figure()
@@ -48,6 +50,7 @@ def create_graph(simulation):
     ys = [random.randint(1, 50) for x in xs]
     axis.plot(xs, ys)
     return fig
+    '''
 
 
 @app.route('/calculations', methods=['POST'])
@@ -73,7 +76,7 @@ def construct_simulation():
 def make_graphs():
     '''Produce the figure shown in the template.'''
     # show the image in the results template
-    fig = create_graph(sim)
+    figures = create_graph(sim)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     response = Response(output.getvalue(), mimetype='image/png')
