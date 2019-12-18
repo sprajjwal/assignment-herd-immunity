@@ -15,10 +15,6 @@ from matplotlib.figure import Figure
 import random
 
 app = Flask(__name__)
-sim = None  # later initialized as a Simulation
-graph = Visualizer("Number of Survivors", (
-                    "Herd Immunity Defense Against Disease " +
-                    "Spread"))
 
 
 @app.route("/", methods=['GET'])
@@ -29,8 +25,8 @@ def simulation_params():
         return render_template("index.html")
 
 
-def create_graph(simulation):
-    """Construct png images from the list returned by running the
+def create_graphs(simulation):
+    """Construct png images and text from the list returned by running the
        simulation. Uses the Visualizer object ran by the Simulation object.
 
        Parameters:
@@ -40,7 +36,11 @@ def create_graph(simulation):
        Response: imported from flask library
 
     """
-    # run the sim,ulation, get a list of bar graphs
+    # run the simulation, get a list of bar graphs
+    graph = Visualizer("Number of Survivors", (
+                        "Herd Immunity Defense Against Disease " +
+                        "Spread"))
+    results = simulation.run_and_collect(graph)
     '''
     # inspired by
     # https://stackoverflow.com/questions/50728328/python-how-to-show-matplotlib-in-flask
@@ -65,13 +65,16 @@ def construct_simulation():
         repro_rate = float(request.form.get("repro_rate"))
         virus = Virus(virus_name, repro_rate, mort_rate)
         initial_infected = int(request.form.get("initial_infected"))
-        sim = Simulation(pop_size, vacc_percentage,  virus, initial_infected)
+        simulator = Simulation(pop_size, vacc_percentage,  virus,
+                               initial_infected)
+        print(f'Simulation: {simulator}')
         # run the simulation
         # results = sim.run_and_collect(graph)
         # redirect to the template for results, giving user the download
-        return redirect(url_for('show_results'))
+        return redirect(url_for('show_results', sim=simulator))
 
 
+"""
 @app.route("/figure")
 def make_graphs():
     '''Produce the figure shown in the template.'''
@@ -81,12 +84,23 @@ def make_graphs():
     FigureCanvas(fig).print_png(output)
     response = Response(output.getvalue(), mimetype='image/png')
     return response
+"""
 
 
-@app.route("/simulation", methods=['GET'])
-def show_results():
+@app.route("/simulation/<sim>")
+def show_results(sim):
     '''Show the steps of the simulation. Present png image to user.'''
-    return render_template("results.html")
+    # show the image in the results template
+    graphs = create_graphs(sim)
+    results = list()  # stores Response object for each graph
+    for tuple in graphs:
+        if len(tuple) > 1:  # the tuple contains more than a report (str)
+            figure = tuple[1]
+            output = io.BytesIO()
+            FigureCanvas(fig).print_png(output)
+            png_graph = Response(output.getvalue(), mimetype='image/png')
+            results.append(png_graph)
+    return render_template("results.html", results=results)
 
 
 @app.route("/about", methods=['GET'])
