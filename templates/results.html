@@ -3,6 +3,6 @@
 <!-- user sees results of the simulation -->
 {% block content %}
 
-<img src="/simulation.png" alt="Plot goes here">
+<img src="{{ url_for('make_results') }}" alt="Plot goes here">
 
 {% endblock %}

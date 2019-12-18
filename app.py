@@ -63,14 +63,19 @@ def simulation_params():
         return redirect(url_for('show_results'), result=result)
 
 
-@app.route("/simulation.png", methods=['GET'])
-def show_results():
-    '''Show the steps of the simulation. Present png image to user.'''
+@app.route("/figure")
+def make_results():
+    '''Produce the figure shown in the template.'''
     fig = create_graph()
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+    response = Response(output.getvalue(), mimetype='image/png')
+    return response
 
+@app.route("/simulation", methods=['GET'])
+def show_results():
+    '''Show the steps of the simulation. Present png image to user.'''
+    return render_template("results.html")
 
 
 @app.route("/about", methods=['GET'])
