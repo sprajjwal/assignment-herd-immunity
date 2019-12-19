@@ -6,7 +6,7 @@ from flask import (
     request,
     Response,
     send_file)
-from visualizer import WebVisualizer
+from assignment_herd_immunity.visualizer import WebVisualizer
 from simulation import Simulation
 from virus import Virus
 import io

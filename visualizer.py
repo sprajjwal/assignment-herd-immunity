@@ -44,6 +44,7 @@ class Visualizer:
         # plt.close()
 """
 
+
 class WebVisualizer(Visualizer):
     def __init__(self, y_label, title):
         super().__init__(y_label, title)
@@ -63,13 +64,13 @@ class WebVisualizer(Visualizer):
         self.num_alive = [vacc, infected, dead, neither]
         self.set_x_label(time_step)
         plt.bar(self.y_pos, self.num_alive, align='center', alpha=0.5)
-        print('Do i get here?')
+        # print('Do i get here?')
         plt.xticks(self.y_pos, self.populations)
         plt.ylabel(self.y_label)
         plt.xlabel(self.x_label)
         plt.title(self.title)
-        name = 'matplot.png'
-        plt.savefig('matplot.png')
+        name = 'static/images/matplot' + str(time_step) + '.png'
+        plt.savefig(name)
         return name
         '''
         # fig = figure(figsize=(4.5, 2.5))

@@ -372,5 +372,5 @@ if __name__ == "__main__":
                                   ("Herd Immunity Defense Against Disease " +
                                    "Spread"))
 
-    # print(sim.run_and_collect(graph))
+    print(sim.run_and_collect(graph))
     print(len(sim.run_and_collect(graph)))
