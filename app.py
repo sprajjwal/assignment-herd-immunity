@@ -88,11 +88,19 @@ def construct_simulation():
         # insert into db
         # sim_id = simulations.insert_one(simulation).inserted_id
         print(f'Simulation: {simulator}')
+        return redirect(url_for('pause'))
         # run the simulation
         # results = sim.run_and_collect(graph)
         # redirect to the template for results, giving user the download
-        return redirect(url_for('show_results',
-                                sim_id=list_of_sim.index(simulator)))
+
+        # return redirect(url_for('show_results', sim_id=list_of_sim.index(simulator)))
+
+
+
+@app.route('/please-wait')
+def pause():
+    '''Wait while the simulation script runs.'''
+    return render_template('pause.html')
 
 
 """
@@ -108,15 +116,19 @@ def make_graphs():
 """
 
 
-@app.route("/simulation/<sim_id>")
-def show_results(sim_id):
+@app.route('/simulation')
+def show_results():
     '''Show the steps of the simulation. Present png image to user.'''
     # GET: show the image in the results template
-    sim = list_of_sim.pop(int(sim_id))
-    graphs = create_graphs(sim)
-    list_of_graphs.append(graphs)
-    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], graphs[1][1])
-    return render_template("results.html", file=full_filename)
+    sim = list_of_sim.pop(0)
+    # graphs = create_graphs(sim)
+    # list_of_graphs.append(graphs)
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'matplot.png')
+    graph = WebVisualizer("Number of Survivors", (
+                        "Herd Immunity Defense Against Disease " +
+                        "Spread"))
+    return sim.run_and_collect(graph)
+    # return render_template("results.html", file=full_filename)
     '''
     results = list()  # stores Response object for each graph
     for tuple in graphs:
@@ -133,6 +145,7 @@ def show_results(sim_id):
 @app.route('/image')
 def process_image():
     '''Make the graphs accessible from the browser.'''
+    return render_template("results.html")
     '''
     graphs = list_of_graphs[0]
     # create a full graph
