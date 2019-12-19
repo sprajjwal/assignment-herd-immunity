@@ -6,7 +6,7 @@ from flask import (
     request,
     Response,
     send_file)
-from visualizer import Visualizer
+from visualizer import WebVisualizer
 from simulation import Simulation
 from virus import Virus
 import io
@@ -44,11 +44,11 @@ def create_graphs(simulation):
 
     """
     # run the simulation, get a list of bar graphs
-    graph = Visualizer("Number of Survivors", (
+    graph = WebVisualizer("Number of Survivors", (
                         "Herd Immunity Defense Against Disease " +
                         "Spread"))
-    results = simulation.run_and_collect(graph)
-    return results
+    graphs = simulation.run_and_collect(graph)
+    return graphs
     '''
     # inspired by
     # https://stackoverflow.com/questions/50728328/python-how-to-show-matplotlib-in-flask

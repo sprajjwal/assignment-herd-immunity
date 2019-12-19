@@ -324,16 +324,20 @@ class Simulation(object):
             # store the terminal output in a str
             step_report = (f"Time step: {time_step_counter}, " +
                            f"total infected: {self.total_infected}, " +
-                           f"current infected: {self.current_infected()} vaccinated %: "
-                           + f"{self.vacc_percentage}, dead: {self.total_dead},  " +
+                           f"current infected: {self.current_infected()}," +
+                           f" vaccinated %: "
+                           + f"{self.vacc_percentage}, " +
+                           f"dead: {self.total_dead},  " +
                            f"total vaccinated: {len(vaccinated)}, " +
-                           f"alive: {len(alive)}, uninfected: {len(uninfected)} " +
+                           f"alive: {len(alive)}, " +
+                           f"uninfected: {len(uninfected)} " +
                            f"uninteracted {self.get_neither()}")
-            visual = visualizer.plot_graph(time_step_counter,
-                                           self.vacc_percentage * self.get_alive_num(),
-                                           self.current_infected(),
-                                           self.get_dead(),
-                                           self.get_neither())
+            visual = visualizer.bar_graph(time_step_counter,
+                                          (self.vacc_percentage *
+                                           self.get_alive_num()),
+                                          self.current_infected(),
+                                          self.get_dead(),
+                                          self.get_neither())
             # associate the str and graph for this step
             group_report = (step_report, visual)
             results.append(group_report)

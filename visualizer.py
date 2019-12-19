@@ -42,7 +42,7 @@ class Visualizer:
         # plt.close()
 
 
-class Web_Visualizer(Visualizer):
+class WebVisualizer(Visualizer):
     def __init__(self, y_label, title):
         self.populations = list()
         self.y_pos = None
