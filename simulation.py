@@ -329,7 +329,7 @@ class Simulation(object):
                            f"total vaccinated: {len(vaccinated)}, " +
                            f"alive: {len(alive)}, uninfected: {len(uninfected)} " +
                            f"uninteracted {self.get_neither()}")
-            visual = visualizer.show_graph(time_step_counter,
+            visual = visualizer.plot_graph(time_step_counter,
                                            self.vacc_percentage * self.get_alive_num(),
                                            self.current_infected(),
                                            self.get_dead(),

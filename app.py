@@ -18,6 +18,7 @@ from bson.objectid import ObjectId
 
 app = Flask(__name__)
 list_of_sim = list()
+list_of_graphs = list()
 client = MongoClient()
 db = client.Herd
 simulations = db.simulations
@@ -47,6 +48,7 @@ def create_graphs(simulation):
                         "Herd Immunity Defense Against Disease " +
                         "Spread"))
     results = simulation.run_and_collect(graph)
+    return results
     '''
     # inspired by
     # https://stackoverflow.com/questions/50728328/python-how-to-show-matplotlib-in-flask
@@ -104,8 +106,11 @@ def make_graphs():
 def show_results(sim_id):
     '''Show the steps of the simulation. Present png image to user.'''
     # GET: show the image in the results template
-    sim = list_of_sim[int(sim_id)]
+    sim = list_of_sim.pop(int(sim_id))
     graphs = create_graphs(sim)
+    list_of_graphs.append(graphs)
+    return render_template("results.html")
+    '''
     results = list()  # stores Response object for each graph
     for tuple in graphs:
         if len(tuple) > 1:  # the tuple contains more than a report (str)
@@ -115,6 +120,13 @@ def show_results(sim_id):
             png_graph = Response(output.getvalue(), mimetype='image/png')
             results.append(png_graph)
     return render_template("results.html", results=results)
+    '''
+
+
+@app.route('/image')
+def process_image():
+    '''Make the graphs accessible from the browser.'''
+    pass
 
 
 @app.route("/about", methods=['GET'])

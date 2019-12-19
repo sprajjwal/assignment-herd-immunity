@@ -41,25 +41,38 @@ class Visualizer:
         plt.pause(5)
         # plt.close()
 
-    def show_graph(self, time_step, vacc, infected, dead, neither):
-        """Return a graph that shows this time step.
+
+class Web_Visualizer(Visualizer):
+    def __init__(self, y_label, title):
+        self.populations = list()
+        self.y_pos = None
+        self.num_alive = list()
+        super().__init__(y_label, title)
+
+    def bar_graph(self, time_step, vacc, infected, dead, neither):
+        """Return self, with metadata about graph initialized.
            Optimized to work in the web UI.
 
         """
         # pp = PdfPages('multipage.pdf')
+        # print(f'Can I print this? {plt}')
+        self.populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
+        self.y_pos = np.arange(len(populations))
+        self.num_alive = [vacc, infected, dead, neither]
+        self.set_x_label(time_step)
+        return self
+        '''
         fig = plt.figure()
-        populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
-        y_pos = np.arange(len(populations))
-        num_alive = [vacc, infected, dead, neither]
         plt.bar(y_pos, num_alive, align='center', alpha=0.5)
         plt.xticks(y_pos, populations)
         plt.ylabel(self.y_label)
-        self.set_x_label(time_step)
         plt.xlabel(self.x_label)
         plt.title(self.title)
         # save the figure as a pdf
         # plt.savefig(pp, format='pdf')
         return plt
+        '''
+
 
 
 if __name__ == "__main__":
