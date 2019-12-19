@@ -126,7 +126,7 @@ def show_results(sim_id):
 @app.route('/image')
 def process_image():
     '''Make the graphs accessible from the browser.'''
-    pass
+    graphs = list_of_graphs.pop(0)
 
 
 @app.route("/about", methods=['GET'])

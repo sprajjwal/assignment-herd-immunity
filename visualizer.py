@@ -57,7 +57,7 @@ class WebVisualizer(Visualizer):
         # pp = PdfPages('multipage.pdf')
         # print(f'Can I print this? {plt}')
         self.populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
-        self.y_pos = np.arange(len(populations))
+        self.y_pos = np.arange(len(self.populations))
         self.num_alive = [vacc, infected, dead, neither]
         self.set_x_label(time_step)
         return self
