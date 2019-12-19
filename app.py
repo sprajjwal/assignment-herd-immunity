@@ -6,9 +6,9 @@ from flask import (
     request,
     Response,
     send_file)
-from assignment_herd_immunity.visualizer import WebVisualizer
-from simulation import Simulation
-from virus import Virus
+from .visualizer import WebVisualizer
+from .simulation import Simulation
+from .virus import Virus
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -18,7 +18,7 @@ import random
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
-from __init__ import run_simulation
+from . import run_simulation
 
 app = Flask(__name__)
 list_of_sim = list()

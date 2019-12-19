@@ -1,9 +1,9 @@
 import random
 import sys
-from person import Person
-from logger import Logger
-from virus import Virus
-import visualizer
+from .person import Person
+from .logger import Logger
+from .virus import Virus
+from . import visualizer
 random.seed(42)
 
 
