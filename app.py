@@ -12,9 +12,12 @@ from virus import Virus
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from matplotlib.pyplot import figure
+import matplotlib.pyplot as plt
 import random
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import os
 
 app = Flask(__name__)
 list_of_sim = list()
@@ -22,6 +25,9 @@ list_of_graphs = list()
 client = MongoClient()
 db = client.Herd
 simulations = db.simulations
+
+PEOPLE_FOLDER = os.path.dirname(os.path.realpath(__file__))
+app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
 
 
 @app.route("/", methods=['GET'])
@@ -109,7 +115,8 @@ def show_results(sim_id):
     sim = list_of_sim.pop(int(sim_id))
     graphs = create_graphs(sim)
     list_of_graphs.append(graphs)
-    return render_template("results.html")
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], graphs[1][1])
+    return render_template("results.html", file=full_filename)
     '''
     results = list()  # stores Response object for each graph
     for tuple in graphs:
@@ -126,8 +133,24 @@ def show_results(sim_id):
 @app.route('/image')
 def process_image():
     '''Make the graphs accessible from the browser.'''
-    graphs = list_of_graphs.pop(0)
-    # make matplotlib object render in template
+    '''
+    graphs = list_of_graphs[0]
+    # create a full graph
+    graph1 = graphs[1][1]
+    fig = plt.figure(figsize=(4.5, 2.5))
+    fig = plt.bar(graph1.y_pos, graph1.num_alive, align='center', alpha=0.5)
+    fig = plt.xticks(graph1.y_pos, graph1.populations)
+    fig = plt.ylabel(graph1.y_label)
+    fig = plt.xlabel(graph1.x_label)
+    fig = plt.title(graph1.title)
+    # make graph visible in template
+    # fig = plt.savefig("matplot.png")
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    png_graph = Response(output.getvalue(), mimetype='image/png')
+    return png_graph
+    '''
+    '''
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     xs = range(100)
@@ -137,6 +160,8 @@ def process_image():
     FigureCanvas(fig).print_png(output)
     png_graph = Response(output.getvalue(), mimetype='image/png')
     return png_graph
+    '''
+
 
 @app.route("/about", methods=['GET'])
 def learn_more():
