@@ -127,7 +127,16 @@ def show_results(sim_id):
 def process_image():
     '''Make the graphs accessible from the browser.'''
     graphs = list_of_graphs.pop(0)
-
+    # make matplotlib object render in template
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = range(100)
+    ys = [random.randint(1, 50) for x in xs]
+    axis.plot(xs, ys)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    png_graph = Response(output.getvalue(), mimetype='image/png')
+    return png_graph
 
 @app.route("/about", methods=['GET'])
 def learn_more():
