@@ -18,6 +18,7 @@ import random
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
+from __init__ import run_simulation
 
 app = Flask(__name__)
 list_of_sim = list()
@@ -28,6 +29,7 @@ simulations = db.simulations
 
 PEOPLE_FOLDER = os.path.dirname(os.path.realpath(__file__))
 app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
+app.jinja_env.globals.update(run_simulation=run_simulation)
 
 
 @app.route("/", methods=['GET'])
@@ -88,7 +90,7 @@ def construct_simulation():
         # insert into db
         # sim_id = simulations.insert_one(simulation).inserted_id
         print(f'Simulation: {simulator}')
-        return redirect(url_for('pause'))
+        return redirect(url_for('pause', sim_id=list_of_sim.index(simulator)))
         # run the simulation
         # results = sim.run_and_collect(graph)
         # redirect to the template for results, giving user the download
@@ -96,11 +98,14 @@ def construct_simulation():
         # return redirect(url_for('show_results', sim_id=list_of_sim.index(simulator)))
 
 
-
-@app.route('/please-wait')
-def pause():
+@app.route('/please-wait/<sim_id>')
+def pause(sim_id):
     '''Wait while the simulation script runs.'''
-    return render_template('pause.html')
+    simulator = list_of_sim.pop(list_of_sim[sim_id])
+    graph = WebVisualizer("Number of Survivors", (
+                        "Herd Immunity Defense Against Disease " +
+                        "Spread"))
+    return render_template('pause.html', simulator=simulator, graph=graph)
 
 
 """
@@ -120,13 +125,13 @@ def make_graphs():
 def show_results():
     '''Show the steps of the simulation. Present png image to user.'''
     # GET: show the image in the results template
-    sim = list_of_sim.pop(0)
+    # sim = list_of_sim.pop(0)
     # graphs = create_graphs(sim)
     # list_of_graphs.append(graphs)
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'matplot.png')
-    graph = WebVisualizer("Number of Survivors", (
-                        "Herd Immunity Defense Against Disease " +
-                        "Spread"))
+    # graph = WebVisualizer("Number of Survivors", (
+    #                     "Herd Immunity Defense Against Disease " +
+    #                     "Spread"))
     return sim.run_and_collect(graph)
     # return render_template("results.html", file=full_filename)
     '''

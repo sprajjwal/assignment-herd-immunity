@@ -3,13 +3,11 @@
 
 {% block content %}
 
-<div class="container">
     <h1>Please Wait!</h1>
-    <img hidden src="/simulation" alt=""> <!-- calls the simulation to run the script -->
+    <p hidden>{{ run_simulation(simulator, graph) }}</p> <!-- calls the simulation to run the script -->
 
     <form action="/image">
         <input class="btn btn-success" type="submit" value="How did yor population do?">
     </form>
-</div>
 
 {% endblock %}
