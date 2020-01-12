@@ -90,7 +90,7 @@ def construct_simulation():
         # insert into db
         # sim_id = simulations.insert_one(simulation).inserted_id
         print(f'Simulation: {simulator}')
-        return redirect(url_for('pause', sim_id=list_of_sim.index(simulator)))
+        return redirect(url_for('pause', sim_id=0))
         # run the simulation
         # results = sim.run_and_collect(graph)
         # redirect to the template for results, giving user the download
@@ -101,7 +101,7 @@ def construct_simulation():
 @app.route('/please-wait/<sim_id>')
 def pause(sim_id):
     '''Wait while the simulation script runs.'''
-    simulator = list_of_sim.pop(list_of_sim[sim_id])
+    simulator = list_of_sim.pop(int(sim_id))
     graph = WebVisualizer("Number of Survivors", (
                         "Herd Immunity Defense Against Disease " +
                         "Spread"))

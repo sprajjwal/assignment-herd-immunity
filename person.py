@@ -1,4 +1,4 @@
-from .virus import Virus
+from virus import Virus
 import random
 random.seed(42)
 
