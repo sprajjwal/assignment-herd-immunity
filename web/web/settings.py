@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import django_heroku
 
 load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -136,6 +137,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Remote Database
+# Remote Database and More Deployment Configuration
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
+django_heroku.settings(locals())
