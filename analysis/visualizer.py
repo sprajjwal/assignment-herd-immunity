@@ -24,7 +24,7 @@ class Visualizer:
         '''Define x_label for bar graph every time step.
         self.x_label = f'Population Sizes During Time Step {time_step}'''
 
-"""
+        """
     def bar_graph(self, time_step, vacc, infected, dead, neither):
         '''Plot a bar histogram showing numbers of alive people who are
            either vaccinated, infected, or neither during one time step.
@@ -74,7 +74,8 @@ class WebVisualizer(Visualizer):
         return name
         '''
         # fig = figure(figsize=(4.5, 2.5))
-        fig = plt.bar(graph1.y_pos, graph1.num_alive, align='center', alpha=0.5)
+        fig = plt.bar(graph1.y_pos, graph1.num_alive, align='center',
+                      alpha=0.5)
         fig = plt.xticks(graph1.y_pos, graph1.populations)
         fig = plt.ylabel(graph1.y_label)
         fig = plt.xlabel(graph1.x_label)

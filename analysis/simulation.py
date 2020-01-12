@@ -55,12 +55,13 @@ class Simulation(object):
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
                         self.virus.name, self.pop_size, self.vacc_percentage,
                         self.initial_infected)
-        self.logger = Logger(self.file_name)
+        # self.logger = Logger(self.file_name)
         self.newly_infected = []
         self.population = self._create_population()
-        self.logger.write_metadata(self.pop_size, self.vacc_percentage,
-                                   self.virus.name, self.virus.mortality_rate,
-                                   self.virus.repro_rate)
+        # self.logger.write_metadata(self.pop_size, self.vacc_percentage,
+        #                            self.virus.name,
+        #                            self.virus.mortality_rate,
+        #                           self.virus.repro_rate)
 
     def get_infected(self):
         '''Helper function that returns a list of alive infected people'''
@@ -224,15 +225,15 @@ class Simulation(object):
                 for random_person in interaction_sample:
                     self.interaction(person, random_person)
                 did_survive = person.did_survive_infection()
-                self.logger.log_infection_survival(person, did_survive)
+                # self.logger.log_infection_survival(person, did_survive)
                 if not did_survive:
                     dead_this_step += 1
                     self.total_dead += 1
                 # self.current_infected -= 1
         infected_this_step = self._infect_newly_infected()
-        self.logger.log_time_step(time_step_counter, infected_this_step,
-                                  dead_this_step, self.total_infected,
-                                  self.total_dead)
+        # self.logger.log_time_step(time_step_counter, infected_this_step,
+        #                            dead_this_step, self.total_infected,
+        #                           self.total_dead)
 
     def current_infected(self):
         inf = 0
@@ -255,11 +256,13 @@ class Simulation(object):
         assert random_person.is_alive is True
 
         if random_person.is_vaccinated:
-            self.logger.log_interaction(person, random_person,
-                                        random_person_vacc=True)
+            pass
+            # self.logger.log_interaction(person, random_person,
+            #                             random_person_vacc=True)
         elif random_person.infection:
-            self.logger.log_interaction(person, random_person,
-                                        random_person_sick=True)
+            pass
+            # self.logger.log_interaction(person, random_person,
+            #                             random_person_sick=True)
         elif (random_person.infection is None and
               not random_person.is_vaccinated):
             num = random.random()
@@ -268,8 +271,8 @@ class Simulation(object):
                 self.newly_infected.append(random_person._id)
                 self.total_infected += 1
                 # self.current_infected += 1
-                self.logger.log_interaction(person, random_person,
-                                            did_infect=True)
+                # self.logger.log_interaction(person, random_person,
+                #                            did_infect=True)
 
     def _infect_newly_infected(self):
         ''' This method should iterate through the list of ._id stored in
