@@ -7,6 +7,7 @@ from django.views.generic.edit import (FormView, CreateView, ModelFormMixin,
 from simulator.models import Experiment, TimeStep
 from simulator.forms import ExperimentForm
 from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect
 
 
 class ExperimentCreate(CreateView):
@@ -17,5 +18,6 @@ class ExperimentCreate(CreateView):
 
     def form_valid(self, form, *args, **kwargs):
         '''Adds model instances to the db as appropriate.'''
-        form.instance.run_experiment()
-        return super().form_valid(form)
+        self.object = form.save()
+        self.object.run_experiment()
+        return HttpResponseRedirect(self.get_success_url())
