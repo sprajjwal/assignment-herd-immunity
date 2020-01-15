@@ -41,6 +41,21 @@ class Experiment(models.Model, Simulation):
                                     "population over the entire experiment."
                                     ))
 
+    def __init__(self, *args, **kwargs):
+        '''Resolve conflict between initializers of superclasses.'''
+        # set Simulation properties to None for now
+        self.population = list()  # List of Person objects
+        self.pop_size = None  # Int
+        self.next_person_id = None  # Int
+        self.virus = None  # Virus object
+        self.initial_infected = None  # Int
+        self.total_infected = 0  # Int
+        self.vacc_percentage = 0.0  # float between 0 and 1
+        self.total_dead = 0  # Int
+        self.newly_infected = list()
+        # call init method of the Model class
+        return super(Model, self).__init__(*args, **kwargs)
+
     def __str__(self):
         '''Return the title of the Experiment instance.'''
         return self.title
@@ -79,6 +94,10 @@ class Experiment(models.Model, Simulation):
 
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
+        # update Simulation properties with form data
+        # run the time steps
+        # save the images with Graph instances
+        # initialize the init and final report
         pass
 
 
