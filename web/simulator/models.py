@@ -46,6 +46,48 @@ class Experiment(models.Model):
         '''Returns a path to the experimental results after form submission.'''
         pass  # will be implemented alongside the DetailView for this model
 
+    def set_init_report(self, report):
+        """Initializes a value for the init_report field.
+
+          Parameters:
+          report(str): a summary of population size, init_infected,
+                       vacc_percentage, mortality_rate, and repro_rate before
+                       any interactions have occurred
+
+          Returns:
+          None
+
+        """
+        pass
+
+    def set_final_summary(self, report):
+        """Initializes a value for the init_summary field.
+
+          Parameters:
+          report(str): a summary of population size, init_infected,
+                       vacc_percentage, mortality_rate, and repro_rate after
+                       the experiment has expired.
+
+          Returns:
+          None
+
+        """
+        pass
+
+    def run_experiment(self, simulation):
+        """Works with the analysis.simulation module to run through the
+           experiment step by step.
+
+           Parameters:
+           simulation(Simulation): an object which uses Pythonic libraries
+                                  to emulate the impact of a deadly epidemic
+
+           Returns:
+           None
+
+        """
+        pass
+
 
 class TimeStep(models.Model):
     '''A visual representation of a time step for a Simulation.'''
