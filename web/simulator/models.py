@@ -77,18 +77,8 @@ class Experiment(models.Model, Simulation):
         """
         pass
 
-    def run_experiment(self, simulation):
-        """Works with the analysis.simulation module to run through the
-           experiment step by step.
-
-           Parameters:
-           simulation(Simulation): an object which uses Pythonic libraries
-                                  to emulate the impact of a deadly epidemic
-
-           Returns:
-           None
-
-        """
+    def run_experiment(self):
+        '''Runs through the experiment, and generates time step graphs.'''
         pass
 
 
