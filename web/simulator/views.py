@@ -11,4 +11,10 @@ from django.urls import reverse, reverse_lazy
 
 class ExperimentCreate(CreateView):
     '''User is able to make a new experiment on the system.'''
-    pass
+    model = Experiment
+    form_class = ExperimentForm
+    template_name = 'simulator/index.html'
+
+    def form_valid(self, form, *args, **kwargs):
+        '''Adds model instances to the db as appropriate.'''
+        return super().form_valid(form)

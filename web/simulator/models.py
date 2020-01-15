@@ -13,19 +13,19 @@ class Experiment(models.Model, Simulation):
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                              unique=True,
                              help_text="Title of your experiment.")
-    pop_size = models.IntegerField(help_text="How large is the population?")
-    vacc_percentage = models.FloatField(help_text=(
+    population_size = models.IntegerField(help_text="How large is the population?")
+    vaccination_percent = models.FloatField(help_text=(
         "What percentage of the population is initially vaccinated " +
         "against the virus?"
     ))
     virus_name = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                                   unique=False, null=True,
                                   help_text="What virus are you testing?")
-    mortality_rate = models.FloatField(help_text=(
+    mortality_chance = models.FloatField(help_text=(
         "How likely is a patient infected with the virus likely to succumb?" +
         "Must be a percentage between 0.00 and 1.00."
     ))
-    repro_rate = models.FloatField(help_text=(
+    reproductive_rate = models.FloatField(help_text=(
         "How effective is the virus at spreading between individuals?" +
         "Must be a percentage between 0.00 and 1.00."
     ))
@@ -54,7 +54,9 @@ class Experiment(models.Model, Simulation):
         self.total_dead = 0  # Int
         self.newly_infected = list()
         # call init method of the Model class
-        return super(Model, self).__init__(*args, **kwargs)
+        return super(models.Model, self).__init__(pop_size=10,
+                                                  vacc_percentage=0,
+                                                  virus=Virus('', 0, 0))
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
