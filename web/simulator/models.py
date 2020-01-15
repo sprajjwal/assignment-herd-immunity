@@ -76,7 +76,7 @@ class Experiment(models.Model, Simulation):
           None
 
         """
-        pass
+        self.init_report = report
 
     def set_final_summary(self, report):
         """Initializes a value for the init_summary field.
@@ -90,7 +90,7 @@ class Experiment(models.Model, Simulation):
           None
 
         """
-        pass
+        self.final_summary = report
 
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
