@@ -5,6 +5,7 @@ import numpy as np
 from pylab import *
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.backends.backend_pdf import PdfPages
+from simulator.models import Experiment, TimeStep
 plt.rcdefaults()
 
 '''

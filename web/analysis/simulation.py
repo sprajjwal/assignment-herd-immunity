@@ -4,6 +4,7 @@ from .person import Person
 from .logger import Logger
 from .virus import Virus
 from . import visualizer
+from simulator.models import Experiment, TimeStep
 random.seed(42)
 
 
