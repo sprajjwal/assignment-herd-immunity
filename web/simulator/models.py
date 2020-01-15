@@ -94,9 +94,23 @@ class Experiment(models.Model, Simulation):
         """
         self.final_summary = report
 
+    def update_fields(self):
+        '''Update atttributes for Simulation, based on Experiment fields.'''
+        # init population related fields
+        self.pop_size = self.population_size
+        # init related fields, virus fields
+        self.next_person_id = self.pop_size
+        self.virus = Virus(self.virus_name, self.reproductive_rate,
+                           self.mortality_chance)
+        self.initial_infected = self.init_infected
+        self.vacc_percentage = self.vaccination_percent
+        # create the population
+        self.population = self._create_population()
+
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
         # update Simulation properties with form data
+        self.update_fields()
         # run the time steps
         # save the images with Graph instances
         # initialize the init and final report
