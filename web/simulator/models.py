@@ -1,14 +1,14 @@
 from django.db import models
-import analysis.person as ap
-import analysis.simulation as a_s
-import analysis.virus as av
-import analysis.visualizer as avl
+from analysis.person import Person
+from analysis.simulation import Simulation
+from analysis.virus import Virus
+from analysis.visualizer import Visualizer
 from web import settings
 from django.utils import timezone
 from django.urls import reverse
 
 
-class Experiment(models.Model):
+class Experiment(models.Model, Simulation):
     '''An experiment by the user to test the herd immunity of a population.'''
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                              unique=True,
@@ -18,6 +18,9 @@ class Experiment(models.Model):
         "What percentage of the population is initially vaccinated " +
         "against the virus?"
     ))
+    virus_name = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
+                                  unique=False, null=True,
+                                  help_text="What virus are you testing?")
     mortality_rate = models.FloatField(help_text=(
         "How likely is a patient infected with the virus likely to succumb?" +
         "Must be a percentage between 0.00 and 1.00."
@@ -89,7 +92,7 @@ class Experiment(models.Model):
         pass
 
 
-class TimeStep(models.Model):
+class TimeStep(models.Model, Visualizer):
     '''A visual representation of a time step for a Simulation.'''
     step_id = models.IntegerField(help_text=(
         "What time step is this TimeStep for?"))
