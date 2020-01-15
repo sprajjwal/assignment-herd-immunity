@@ -2,7 +2,7 @@ from django.db import models
 from analysis.person import Person
 from analysis.simulation import Simulation
 from analysis.virus import Virus
-from analysis.visualizer import Visualizer
+from analysis.visualizer import Visualizer, WebVisualizer
 from web import settings
 from django.utils import timezone
 from django.urls import reverse
@@ -13,7 +13,8 @@ class Experiment(models.Model, Simulation):
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                              unique=True,
                              help_text="Title of your experiment.")
-    population_size = models.IntegerField(help_text="How large is the population?")
+    population_size = models.IntegerField(help_text=(
+        "How large is the population?"))
     vaccination_percent = models.FloatField(help_text=(
         "What percentage of the population is initially vaccinated " +
         "against the virus?"
@@ -65,9 +66,9 @@ class Experiment(models.Model, Simulation):
     def get_absolute_url(self):
         '''Returns a path to the experimental results after form submission.'''
         pass  # will be implemented alongside the DetailView for this model
-
+    """
     def set_init_report(self, report):
-        """Initializes a value for the init_report field.
+        '''Initializes a value for the init_report field.
 
           Parameters:
           report(str): a summary of population size, init_infected,
@@ -77,11 +78,11 @@ class Experiment(models.Model, Simulation):
           Returns:
           None
 
-        """
+        '''
         self.init_report = report
 
     def set_final_summary(self, report):
-        """Initializes a value for the init_summary field.
+        '''Initializes a value for the init_summary field.
 
           Parameters:
           report(str): a summary of population size, init_infected,
@@ -91,8 +92,9 @@ class Experiment(models.Model, Simulation):
           Returns:
           None
 
-        """
+        '''
         self.final_summary = report
+    """
 
     def update_fields(self):
         '''Update atttributes for Simulation, based on Experiment fields.'''
@@ -107,14 +109,86 @@ class Experiment(models.Model, Simulation):
         # create the population
         self.population = self._create_population()
 
+    def run_and_collect(self, visualizer):
+        """This method should run the simulation until all requirements for
+           ending the simulation are met.
+
+           Parameters:
+           visualizer(Visualizer): constrcuts bar graph using matplotlib
+
+           Returns:
+           list: an array of the bar graphs for each step
+                 arranged in tuples: contains both the graph and its terminal
+                                     output (str)
+        """
+        results = list()  # stores graphs and terminal output
+        time_step_counter = 1
+        simulation_should_continue = 0
+        should_continue = None
+
+        assert self.population[0]._id == 0
+        init_report = (f"Time step 0, Total infected: {self.total_infected}, "
+                       + f"current infected: {self.current_infected()}, " +
+                         f"vaccinated percentage: {self.vacc_percentage}, " +
+                         f"dead: {self.total_dead}")
+        results.append((init_report,))
+
+        while True:
+            self.time_step(time_step_counter)
+            # create a list of alive persons
+            alive = self.get_alive()
+            # create a list of vaccinated persons
+            vaccinated = []
+            for person in self.population:
+                if person in alive and person.is_vaccinated:
+                    vaccinated.append(person)
+            # create a list of uninfected persons
+            uninfected = []
+            for person in alive:
+                if person not in vaccinated and person.infection:
+                    uninfected.append(person)
+            # store the terminal output in a str
+            step_report = (f"Time step: {time_step_counter}, " +
+                           f"total infected: {self.total_infected}, " +
+                           f"current infected: {self.current_infected()}," +
+                           f" vaccinated %: "
+                           + f"{self.vacc_percentage}, " +
+                           f"dead: {self.total_dead},  " +
+                           f"total vaccinated: {len(vaccinated)}, " +
+                           f"alive: {len(alive)}, " +
+                           f"uninfected: {len(uninfected)} " +
+                           f"uninteracted {self.get_neither()}")
+            visual = visualizer.bar_graph(time_step_counter,
+                                          (self.vacc_percentage *
+                                           self.get_alive_num()),
+                                          self.current_infected(),
+                                          self.get_dead(),
+                                          self.get_neither())
+            # associate the str and graph for this step
+            group_report = (step_report, visual)
+            results.append(group_report)
+            # decide to continue
+            if self._simulation_should_continue():
+                simulation_should_continue += 1
+                final_report = (f'The simulation has ended after ' +
+                                f'{time_step_counter} turns.',)
+                results.append(final_report)
+                break
+
+            time_step_counter += 1
+        return results
+
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
         # update Simulation properties with form data
         self.update_fields()
-        # run the time steps
+        # run through time steps, collect visuals and reports
+        imager = WebVisualizer("Number of Survivors",
+                               ("Herd Immunity Defense Against Disease " +
+                                "Spread"))
+        (self.init_report, self.final_summary) = self.run_and_collect(imager)
         # save the images with Graph instances
         # initialize the init and final report
-        pass
 
 
 class TimeStep(models.Model, Visualizer):
