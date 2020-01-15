@@ -17,4 +17,5 @@ class ExperimentCreate(CreateView):
 
     def form_valid(self, form, *args, **kwargs):
         '''Adds model instances to the db as appropriate.'''
+        form.instance.run_experiment()
         return super().form_valid(form)
