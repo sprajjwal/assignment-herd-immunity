@@ -97,6 +97,54 @@ class Experiment(models.Model, Simulation):
                 persons.append(person)
         return persons
 
+    def make_report(self, counter):
+        """Return a report of the results of this time step.
+
+           Parameters:
+           counter(int): the numeric identifier of the current step
+
+           Returns:
+           str: a verbal record of the TimeStep results
+
+        """
+        # create a list of alive persons
+        alive = self.get_alive()
+        # create a list of vaccinated persons
+        vaccinated = self.store_vacc_persons()
+        # create a list of uninfected persons
+        uninfected = self.store_uninfected_persons(alive)
+        # init TimeStep description field
+        return (f"Time step: {counter}, " +
+                f"total infected: {self.total_infected}, " +
+                f"current infected: {self.current_infected()}," +
+                f" vaccinated %: "
+                + f"{self.vacc_percentage}, " +
+                f"dead: {self.total_dead},  " +
+                f"total vaccinated: {len(vaccinated)}, " +
+                f"alive: {len(alive)}, " +
+                f"uninfected: {len(uninfected)} " +
+                f"uninteracted {self.get_neither()}")
+
+    def record_init_conditions(self):
+        '''Return a str declaring population conditions before the epidemic.'''
+        return (f"Time step 0, Total infected: {self.total_infected}, "
+                + f"current infected: {self.current_infected()}, " +
+                f"vaccinated percentage: {self.vacc_percentage}, " +
+                f"dead: {self.total_dead}")
+
+    def record_final(self, counter):
+        """Return a summary of the population conditions when simulation
+           finished.
+
+           Parameters:
+           counter(int): the numeric identifier of the current step
+
+           Returns:
+           str: a verbal record of the TimeStep results
+        """
+        return (f'The simulation has ended after ' +
+                f'{counter} turns.',)
+
     def run_and_collect(self, visualizer):
         """This method should run the simulation until all requirements for
            ending the simulation are met.
@@ -114,12 +162,7 @@ class Experiment(models.Model, Simulation):
         should_continue = None
         assert self.population[0]._id == 0
         # create the initial report
-        init_report = (f"Time step 0, Total infected: {self.total_infected}, "
-                       + f"current infected: {self.current_infected()}, " +
-                         f"vaccinated percentage: {self.vacc_percentage}, " +
-                         f"dead: {self.total_dead}")
-        results.append(init_report)
-
+        results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
             time_step = TimeStep()
@@ -128,24 +171,8 @@ class Experiment(models.Model, Simulation):
             # init TimeStep experiment field
             time_step.experiment = self
             self.time_step(time_step_counter)
-            # create a list of alive persons
-            alive = self.get_alive()
-            # create a list of vaccinated persons
-            vaccinated = self.store_vacc_persons()
-            # create a list of uninfected persons
-            uninfected = self.store_uninfected_persons(alive)
-            # init TimeStep description field
-            step_report = (f"Time step: {time_step_counter}, " +
-                           f"total infected: {self.total_infected}, " +
-                           f"current infected: {self.current_infected()}," +
-                           f" vaccinated %: "
-                           + f"{self.vacc_percentage}, " +
-                           f"dead: {self.total_dead},  " +
-                           f"total vaccinated: {len(vaccinated)}, " +
-                           f"alive: {len(alive)}, " +
-                           f"uninfected: {len(uninfected)} " +
-                           f"uninteracted {self.get_neither()}")
-            time_step.description = step_report
+            # get a verbal report of the time step results
+            time_step.description = self.make_report(time_step_counter)
             # init TimeStep image field
             graph = visualizer.bar_graph(time_step_counter,
                                          (self.vacc_percentage *
@@ -159,9 +186,7 @@ class Experiment(models.Model, Simulation):
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
-                final_report = (f'The simulation has ended after ' +
-                                f'{time_step_counter} turns.',)
-                results.append(final_report)
+                results.append(self.record_final(time_step_counter))
                 break
             time_step_counter += 1
         return results
