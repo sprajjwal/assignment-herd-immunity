@@ -109,41 +109,47 @@ class Experiment(models.Model, Simulation):
         # create the population
         self.population = self._create_population()
 
+    def store_vacc_persons(self):
+        '''Return people in the population who are alive and vaccinated.'''
+        persons = list()
+        for person in self.population:
+            if person in alive and person.is_vaccinated:
+                persons.append(person)
+        return persons
+
     def run_and_collect(self, visualizer):
         """This method should run the simulation until all requirements for
            ending the simulation are met.
 
            Parameters:
-           visualizer(Visualizer): constrcuts bar graph using matplotlib
+           visualizer(Visualizer): constructs bar graph using matplotlib
 
            Returns:
-           list: an array of the bar graphs for each step
-                 arranged in tuples: contains both the graph and its terminal
-                                     output (str)
+           list: contains str:init_report and str:final_report
+
         """
-        results = list()  # stores graphs and terminal output
+        results = list()  # return value
         time_step_counter = 1
         simulation_should_continue = 0
         should_continue = None
-
         assert self.population[0]._id == 0
+        # create the initial report
         init_report = (f"Time step 0, Total infected: {self.total_infected}, "
                        + f"current infected: {self.current_infected()}, " +
                          f"vaccinated percentage: {self.vacc_percentage}, " +
                          f"dead: {self.total_dead}")
-        results.append((init_report,))
+        results.append(init_report)
 
         while True:
+            time_step = TimeStep()  # new TimeStep instance
+            time_step.step_id = time_step_counter  #
             self.time_step(time_step_counter)
             # create a list of alive persons
             alive = self.get_alive()
             # create a list of vaccinated persons
-            vaccinated = []
-            for person in self.population:
-                if person in alive and person.is_vaccinated:
-                    vaccinated.append(person)
+            vaccinated = self.store_vacc_persons()
             # create a list of uninfected persons
-            uninfected = []
+            uninfected = list()
             for person in alive:
                 if person not in vaccinated and person.infection:
                     uninfected.append(person)
@@ -164,9 +170,12 @@ class Experiment(models.Model, Simulation):
                                           self.current_infected(),
                                           self.get_dead(),
                                           self.get_neither())
+            '''
             # associate the str and graph for this step
             group_report = (step_report, visual)
             results.append(group_report)
+            '''
+            time_step.save()  # move TimeStep instance to db
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
@@ -184,8 +193,7 @@ class Experiment(models.Model, Simulation):
         self.update_fields()
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
-                               ("Herd Immunity Defense Against Disease " +
-                                "Spread"))
+                               "Herd Immunity Defense Against Disease Spread")
         (self.init_report, self.final_summary) = self.run_and_collect(imager)
         # save the images with Graph instances
         # initialize the init and final report
