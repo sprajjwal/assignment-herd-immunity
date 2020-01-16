@@ -143,7 +143,37 @@ class Experiment(models.Model, Simulation):
            str: a verbal record of the TimeStep results
         """
         return (f'The simulation has ended after ' +
-                f'{counter} turns.',)
+                f'{counter} turns.')
+
+    def create_time_step(self, counter):
+        """Make a TimeStep instance out of the simulation step.
+
+           Parameters:
+           counter(int): the numeric id of the time step
+
+           Return:
+           TimeStep: a single instance of the model, related to the calling
+                     Experiment model
+        """
+        # init TimeStep step_id field
+        step_id = time_step_counter
+        # init TimeStep experiment field
+        # time_step.experiment = self
+        self.time_step(counter)
+        # get a verbal report of the time step results
+        description = self.make_report(time_step_counter)
+        # init TimeStep image field
+        graph = visualizer.bar_graph(time_step_counter,
+                                     (self.vacc_percentage *
+                                      self.get_alive_num()),
+                                     self.current_infected(),
+                                     self.get_dead(),
+                                     self.get_neither())
+        image = ImageFile(file=graph)
+        # return a TimeStep instance with these fields
+        return TimeStep.objects.create(step_id=step_id,
+                                       description=description,
+                                       experiment=self, image=image)
 
     def run_and_collect(self, visualizer):
         """This method should run the simulation until all requirements for
@@ -165,23 +195,7 @@ class Experiment(models.Model, Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = TimeStep()
-            # init TimeStep step_id field
-            time_step.step_id = time_step_counter
-            # init TimeStep experiment field
-            time_step.experiment = self
-            self.time_step(time_step_counter)
-            # get a verbal report of the time step results
-            time_step.description = self.make_report(time_step_counter)
-            # init TimeStep image field
-            graph = visualizer.bar_graph(time_step_counter,
-                                         (self.vacc_percentage *
-                                          self.get_alive_num()),
-                                         self.current_infected(),
-                                         self.get_dead(),
-                                         self.get_neither())
-            time_step.image = ImageFile(file=graph)
-            # move TimeStep instance to db
+            time_step = create_time_step(time_step_counter)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
