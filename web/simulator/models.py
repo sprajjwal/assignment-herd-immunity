@@ -6,6 +6,7 @@ from analysis.visualizer import Visualizer, WebVisualizer
 from web import settings
 from django.utils import timezone
 from django.urls import reverse
+from django.core.files.images import ImageFile
 
 
 class Experiment(models.Model, Simulation):
@@ -66,35 +67,6 @@ class Experiment(models.Model, Simulation):
     def get_absolute_url(self):
         '''Returns a path to the experimental results after form submission.'''
         pass  # will be implemented alongside the DetailView for this model
-    """
-    def set_init_report(self, report):
-        '''Initializes a value for the init_report field.
-
-          Parameters:
-          report(str): a summary of population size, init_infected,
-                       vacc_percentage, mortality_rate, and repro_rate before
-                       any interactions have occurred
-
-          Returns:
-          None
-
-        '''
-        self.init_report = report
-
-    def set_final_summary(self, report):
-        '''Initializes a value for the init_summary field.
-
-          Parameters:
-          report(str): a summary of population size, init_infected,
-                       vacc_percentage, mortality_rate, and repro_rate after
-                       the experiment has expired.
-
-          Returns:
-          None
-
-        '''
-        self.final_summary = report
-    """
 
     def update_fields(self):
         '''Update atttributes for Simulation, based on Experiment fields.'''
@@ -149,8 +121,12 @@ class Experiment(models.Model, Simulation):
         results.append(init_report)
 
         while True:
-            time_step = TimeStep()  # new TimeStep instance
-            time_step.step_id = time_step_counter  #
+            # make TimeStep instances as the simulation runs
+            time_step = TimeStep()
+            # init TimeStep step_id field
+            time_step.step_id = time_step_counter
+            # init TimeStep experiment field
+            time_step.experiment = self
             self.time_step(time_step_counter)
             # create a list of alive persons
             alive = self.get_alive()
@@ -158,7 +134,7 @@ class Experiment(models.Model, Simulation):
             vaccinated = self.store_vacc_persons()
             # create a list of uninfected persons
             uninfected = self.store_uninfected_persons(alive)
-            # store the terminal output in a str
+            # init TimeStep description field
             step_report = (f"Time step: {time_step_counter}, " +
                            f"total infected: {self.total_infected}, " +
                            f"current infected: {self.current_infected()}," +
@@ -169,18 +145,17 @@ class Experiment(models.Model, Simulation):
                            f"alive: {len(alive)}, " +
                            f"uninfected: {len(uninfected)} " +
                            f"uninteracted {self.get_neither()}")
-            visual = visualizer.bar_graph(time_step_counter,
-                                          (self.vacc_percentage *
-                                           self.get_alive_num()),
-                                          self.current_infected(),
-                                          self.get_dead(),
-                                          self.get_neither())
-            '''
-            # associate the str and graph for this step
-            group_report = (step_report, visual)
-            results.append(group_report)
-            '''
-            time_step.save()  # move TimeStep instance to db
+            time_step.description = step_report
+            # init TimeStep image field
+            graph = visualizer.bar_graph(time_step_counter,
+                                         (self.vacc_percentage *
+                                          self.get_alive_num()),
+                                         self.current_infected(),
+                                         self.get_dead(),
+                                         self.get_neither())
+            time_step.image = ImageFile(file=graph)
+            # move TimeStep instance to db
+            time_step.save()
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
@@ -188,7 +163,6 @@ class Experiment(models.Model, Simulation):
                                 f'{time_step_counter} turns.',)
                 results.append(final_report)
                 break
-
             time_step_counter += 1
         return results
 
@@ -213,8 +187,7 @@ class TimeStep(models.Model, Visualizer):
     image = models.ImageField(upload_to='images/',
                               help_text=("Graph representing changes to the " +
                                          "population during the TimeStep."))
-    description = models.TextField(help_text=(
-                                    "What happened during this time step?"))
+    description = models.TextField(help_text="Verbal summary of time step.")
     created = models.DateTimeField(auto_now_add=True,
                                    help_text=("The date and time this TimeStep"
                                               + " was created. Auto-generated "

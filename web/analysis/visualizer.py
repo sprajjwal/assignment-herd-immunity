@@ -69,7 +69,7 @@ class WebVisualizer(Visualizer):
         plt.ylabel(self.y_label)
         plt.xlabel(self.x_label)
         plt.title(self.title)
-        name = 'static/images/matplot' + str(time_step) + '.png'
+        name = 'images/matplot' + str(time_step) + '.png'
         plt.savefig(name)
         return name
         '''
