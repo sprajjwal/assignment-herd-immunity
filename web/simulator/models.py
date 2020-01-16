@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.core.files.images import ImageFile
 
 
-class Experiment(models.Model, Simulation):
+class Experiment(Simulation, models.Model):
     '''An experiment by the user to test the herd immunity of a population.'''
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                              unique=True,
@@ -42,23 +42,31 @@ class Experiment(models.Model, Simulation):
                                     "population over the entire experiment."
                                     ))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, pop_size=10, vacc_percentage=0.0,
+                 virus=Virus('', 0.1, 0.1),
+                 *args, **kwargs):
         '''Resolve conflict between initializers of superclasses.'''
         # set Simulation properties to None for now
         self.population = list()  # List of Person objects
-        self.pop_size = None  # Int
+        self.pop_size = pop_size  # Int
         self.next_person_id = None  # Int
-        self.virus = None  # Virus object
+        self.virus = virus  # Virus object
         self.initial_infected = None  # Int
         self.total_infected = 0  # Int
-        self.vacc_percentage = 0.0  # float between 0 and 1
+        self.vacc_percentage = vc = vacc_percentage  # float between 0 and 1
         self.total_dead = 0  # Int
         self.newly_infected = list()
         # call init method of the Model class
-        return super(models.Model, self).__init__(pop_size=10,
-                                                  vacc_percentage=0,
-                                                  virus=Virus('', 0, 0))
-
+        return super(Experiment, self).__init__(pop_size=self.pop_size,
+                                                vacc_percentage=vc,
+                                                virus=self.virus,
+                                                *args, **kwargs)
+        # return super(models.Model, self).__init__(*args, **kwargs)
+        '''
+        return super(Experiment, self).__init__(pop_size=10,
+                                                vacc_percentage=0.0,
+                                                virus=Virus('', 0.1, 0.1))
+        '''
     def __str__(self):
         '''Return the title of the Experiment instance.'''
         return self.title
