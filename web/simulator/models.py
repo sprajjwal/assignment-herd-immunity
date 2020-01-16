@@ -117,6 +117,14 @@ class Experiment(models.Model, Simulation):
                 persons.append(person)
         return persons
 
+    def store_uninfected_persons(self, alive):
+        '''Return people who are alive, not vaccinated,and not infected.'''
+        persons = list()
+        for person in alive:
+            if person not in vaccinated and person.infection:
+                persons.append(person)
+        return persons
+
     def run_and_collect(self, visualizer):
         """This method should run the simulation until all requirements for
            ending the simulation are met.
@@ -149,10 +157,7 @@ class Experiment(models.Model, Simulation):
             # create a list of vaccinated persons
             vaccinated = self.store_vacc_persons()
             # create a list of uninfected persons
-            uninfected = list()
-            for person in alive:
-                if person not in vaccinated and person.infection:
-                    uninfected.append(person)
+            uninfected = self.store_uninfected_persons(alive)
             # store the terminal output in a str
             step_report = (f"Time step: {time_step_counter}, " +
                            f"total infected: {self.total_infected}, " +
