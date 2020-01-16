@@ -35,7 +35,6 @@ class Experiment(models.Model, Simulation):
         "At the beginning of the experiment, how many people in the " +
         "population are infected with the virus?"
     ))
-    # initialize using a method below, and use it in analysis.simulation
     init_report = models.TextField(help_text=(
                                     "Summary of initial conditions."))
     final_summary = models.TextField(help_text=(
@@ -66,7 +65,8 @@ class Experiment(models.Model, Simulation):
 
     def get_absolute_url(self):
         '''Returns a path to the experimental results after form submission.'''
-        pass  # will be implemented alongside the DetailView for this model
+        path_components = {'pk': self.pk}
+        return reverse('simulator:experiment_detail', kwargs=path_components)
 
     def update_fields(self):
         '''Update atttributes for Simulation, based on Experiment fields.'''
