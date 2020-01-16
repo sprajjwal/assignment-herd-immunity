@@ -25,13 +25,13 @@ class Experiment(models.Model, Simulation):
                                   help_text="What virus are you testing?")
     mortality_chance = models.FloatField(help_text=(
         "How likely is a patient infected with the virus likely to succumb?" +
-        "Must be a percentage between 0.00 and 1.00."
+        " Must be a percentage between 0.00 and 1.00."
     ))
     reproductive_rate = models.FloatField(help_text=(
         "How effective is the virus at spreading between individuals?" +
-        "Must be a percentage between 0.00 and 1.00."
+        " Must be a percentage between 0.00 and 1.00."
     ))
-    init_infected = models.IntegerField(help_text=(
+    initial_infected = models.IntegerField(help_text=(
         "At the beginning of the experiment, how many people in the " +
         "population are infected with the virus?"
     ))

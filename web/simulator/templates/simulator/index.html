@@ -6,31 +6,23 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-10">
         <!-- display form -->
         <h1>Herd Immunity Simulation</h1>
 
         <h3>Please fill out the form below.</h3>
-
         <p>
             <i>
                 Is our population ready for the outbreak?
             </i>
         </p>
-
-        <form class="form-group" action="/calculations" method="POST">
-            Population size?<input name="pop_size" type="text" class="form-group-control" placeholder="Enter an integer"><br>
-            Percentage vaccinated?<input name="vacc_percentage" type="text" class="form-group-control" placeholder="Enter a decimal"><br>
-            Name of virus?<input name="virus_name" type="text" class="form-group-control" placeholder="Enter a word"><br>
-            Mortality rate?<input name="mortality_rate" type="text" class="form-group-control" placeholder="Enter a decimal"><br>
-            Reproduction rate (of the virus?)<input name="repro_rate" type="text" class="form-group-control" placeholder="Enter a decimal"><br>
-            Number of initially infected?<input name="initial_infected" type="text" class="form-group-control" placeholder="Enter an integer"><br><br>
+        <!-- form for experimental values -->
+        <form class="form-group" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
             <input type="submit" class="btn btn-primary" value="See it Play Out!">
         </form>
-    </div>
-
-    <div class="col-md-6">
-        <!-- display cool graphic image -->
+        <br>
     </div>
 </div>
 
