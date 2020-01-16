@@ -213,8 +213,6 @@ class Experiment(models.Model, Simulation):
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
         (self.init_report, self.final_summary) = self.run_and_collect(imager)
-        # save the images with Graph instances
-        # initialize the init and final report
 
 
 class TimeStep(models.Model, Visualizer):
