@@ -11,102 +11,6 @@ from django.core.files.images import ImageFile
 
 class WebSimulation(Simulation):
     '''A Simulation class especially made to work with Django models.'''
-    pass
-
-
-class Experiment(models.Model):
-    '''An experiment by the user to test the herd immunity of a population.'''
-    title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
-                             unique=True,
-                             help_text="Title of your experiment.")
-    population_size = models.IntegerField(help_text=(
-        "How large is the population?"))
-    vaccination_percent = models.FloatField(help_text=(
-        "What percentage of the population is initially vaccinated " +
-        "against the virus?"
-    ))
-    virus_name = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
-                                  unique=False, null=True,
-                                  help_text="What virus are you testing?")
-    mortality_chance = models.FloatField(help_text=(
-        "How likely is a patient infected with the virus likely to succumb?" +
-        " Must be a percentage between 0.00 and 1.00."
-    ))
-    reproductive_rate = models.FloatField(help_text=(
-        "How effective is the virus at spreading between individuals?" +
-        " Must be a percentage between 0.00 and 1.00."
-    ))
-    initial_infected = models.IntegerField(help_text=(
-        "At the beginning of the experiment, how many people in the " +
-        "population are infected with the virus?"
-    ))
-    init_report = models.TextField(help_text=(
-                                    "Summary of initial conditions."))
-    final_summary = models.TextField(help_text=(
-                                    "Summary of what happened to the " +
-                                    "population over the entire experiment."
-                                    ))
-    """
-    def __init__(self, pop_size=10, vacc_percentage=0.0,
-                 virus=Virus('', 0.1, 0.1),
-                 *args, **kwargs):
-        '''Resolve conflict between initializers of superclasses.'''
-        # set Simulation properties to None for now
-        self.population = list()  # List of Person objects
-        self.pop_size = pop_size  # Int
-        self.next_person_id = None  # Int
-        self.virus = virus  # Virus object
-        self.initial_infected = None  # Int
-        self.total_infected = 0  # Int
-        self.vacc_percentage = vc = vacc_percentage  # float between 0 and 1
-        self.total_dead = 0  # Int
-        self.newly_infected = list()
-        # call init method of the Model class
-        return super(Experiment, self).__init__(pop_size=self.pop_size,
-                                                vacc_percentage=vc,
-                                                virus=self.virus,
-                                                *args, **kwargs)
-        # return super(models.Model, self).__init__(*args, **kwargs)
-        '''
-        return super(Experiment, self).__init__(pop_size=10,
-                                                vacc_percentage=0.0,
-                                                virus=Virus('', 0.1, 0.1))
-        '''
-    """
-    def __str__(self):
-        '''Return the title of the Experiment instance.'''
-        return self.title
-
-    def get_absolute_url(self):
-        '''Returns a path to the experimental results after form submission.'''
-        path_components = {'pk': self.pk}
-        return reverse('simulator:experiment_detail', kwargs=path_components)
-
-    def generate_web_sim(self, experiment):
-        """Update atttributes for Simulation, based on new data from an
-           Experiment instance.
-
-           Parameters:
-           experiment(Experiment): one that has just been made from
-                                   ExperimentCreate view.
-
-           Returns:
-           WebSimulation: a new instance of the class
-
-        """
-        # init population related fields
-        pop_size = self.population_size
-        # init related fields, virus fields
-        # self.next_person_id = self.pop_size
-        virus = Virus(self.virus_name, self.reproductive_rate,
-                           self.mortality_chance)
-        initial_infected = self.init_infected
-        vacc_percentage = self.vaccination_percent
-        # create the population
-        # self.population = self._create_population()
-        return WebSimulation(pop_size, vacc_percentage,
-                             virus, initial_infected)
-
     def store_vacc_persons(self):
         '''Return people in the population who are alive and vaccinated.'''
         persons = list()
@@ -230,6 +134,100 @@ class Experiment(models.Model):
                 break
             time_step_counter += 1
         return results
+
+
+class Experiment(models.Model):
+    '''An experiment by the user to test the herd immunity of a population.'''
+    title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
+                             unique=True,
+                             help_text="Title of your experiment.")
+    population_size = models.IntegerField(help_text=(
+        "How large is the population?"))
+    vaccination_percent = models.FloatField(help_text=(
+        "What percentage of the population is initially vaccinated " +
+        "against the virus?"
+    ))
+    virus_name = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
+                                  unique=False, null=True,
+                                  help_text="What virus are you testing?")
+    mortality_chance = models.FloatField(help_text=(
+        "How likely is a patient infected with the virus likely to succumb?" +
+        " Must be a percentage between 0.00 and 1.00."
+    ))
+    reproductive_rate = models.FloatField(help_text=(
+        "How effective is the virus at spreading between individuals?" +
+        " Must be a percentage between 0.00 and 1.00."
+    ))
+    initial_infected = models.IntegerField(help_text=(
+        "At the beginning of the experiment, how many people in the " +
+        "population are infected with the virus?"
+    ))
+    init_report = models.TextField(help_text=(
+                                    "Summary of initial conditions."))
+    final_summary = models.TextField(help_text=(
+                                    "Summary of what happened to the " +
+                                    "population over the entire experiment."
+                                    ))
+    """
+    def __init__(self, pop_size=10, vacc_percentage=0.0,
+                 virus=Virus('', 0.1, 0.1),
+                 *args, **kwargs):
+        '''Resolve conflict between initializers of superclasses.'''
+        # set Simulation properties to None for now
+        self.population = list()  # List of Person objects
+        self.pop_size = pop_size  # Int
+        self.next_person_id = None  # Int
+        self.virus = virus  # Virus object
+        self.initial_infected = None  # Int
+        self.total_infected = 0  # Int
+        self.vacc_percentage = vc = vacc_percentage  # float between 0 and 1
+        self.total_dead = 0  # Int
+        self.newly_infected = list()
+        # call init method of the Model class
+        return super(Experiment, self).__init__(pop_size=self.pop_size,
+                                                vacc_percentage=vc,
+                                                virus=self.virus,
+                                                *args, **kwargs)
+        # return super(models.Model, self).__init__(*args, **kwargs)
+        '''
+        return super(Experiment, self).__init__(pop_size=10,
+                                                vacc_percentage=0.0,
+                                                virus=Virus('', 0.1, 0.1))
+        '''
+    """
+    def __str__(self):
+        '''Return the title of the Experiment instance.'''
+        return self.title
+
+    def get_absolute_url(self):
+        '''Returns a path to the experimental results after form submission.'''
+        path_components = {'pk': self.pk}
+        return reverse('simulator:experiment_detail', kwargs=path_components)
+
+    def generate_web_sim(self, experiment):
+        """Update atttributes for Simulation, based on new data from an
+           Experiment instance.
+
+           Parameters:
+           experiment(Experiment): one that has just been made from
+                                   ExperimentCreate view.
+
+           Returns:
+           WebSimulation: a new instance of the class
+
+        """
+        # init population related fields
+        pop_size = self.population_size
+        # init related fields, virus fields
+        # self.next_person_id = self.pop_size
+        virus = Virus(self.virus_name, self.reproductive_rate,
+                      self.mortality_chance)
+        initial_infected = self.init_infected
+        vacc_percentage = self.vaccination_percent
+        # create the population
+        # self.population = self._create_population()
+        return WebSimulation(pop_size, vacc_percentage,
+                             virus, initial_infected)
 
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
