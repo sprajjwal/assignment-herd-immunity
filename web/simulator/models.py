@@ -11,8 +11,17 @@ from django.core.files.images import ImageFile
 
 class WebSimulation(Simulation):
     '''A Simulation class especially made to work with Django models.'''
-    def store_vacc_persons(self):
-        '''Return people in the population who are alive and vaccinated.'''
+    def store_vacc_persons(self, alive):
+        """Return people in the population who are alive and vaccinated.
+
+           Parameters:
+           alive(list): a collection of Person objects
+
+           Return:
+           persons(list): a collection of Person objects who are both alive and
+                          vaccinated
+
+        """
         persons = list()
         for person in self.population:
             if person in alive and person.is_vaccinated:
@@ -40,7 +49,7 @@ class WebSimulation(Simulation):
         # create a list of alive persons
         alive = self.get_alive()
         # create a list of vaccinated persons
-        vaccinated = self.store_vacc_persons()
+        vaccinated = self.store_vacc_persons(alive)
         # create a list of uninfected persons
         uninfected = self.store_uninfected_persons(alive)
         # init TimeStep description field
@@ -75,25 +84,26 @@ class WebSimulation(Simulation):
         return (f'The simulation has ended after ' +
                 f'{counter} turns.')
 
-    def create_time_step(self, counter):
+    def create_time_step(self, step_id):
         """Make a TimeStep instance out of the simulation step.
 
            Parameters:
-           counter(int): the numeric id of the time step
+           step_id(int): the numeric id of the time step
 
            Return:
            TimeStep: a single instance of the model, related to the calling
                      Experiment model
         """
         # init TimeStep step_id field
-        step_id = time_step_counter
+        # step_id = counter
         # init TimeStep experiment field
         # time_step.experiment = self
-        self.time_step(counter)
+        # compute the logic for this step
+        self.time_step(step_id)
         # get a verbal report of the time step results
-        description = self.make_report(time_step_counter)
+        description = self.make_report(step_id)
         # init TimeStep image field
-        graph = visualizer.bar_graph(time_step_counter,
+        graph = visualizer.bar_graph(step_id,
                                      (self.vacc_percentage *
                                       self.get_alive_num()),
                                      self.current_infected(),
@@ -125,7 +135,7 @@ class WebSimulation(Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = create_time_step(time_step_counter)
+            time_step = self.create_time_step(time_step_counter)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
@@ -178,13 +188,12 @@ class Experiment(models.Model):
         path_components = {'pk': self.pk}
         return reverse('simulator:experiment_detail', kwargs=path_components)
 
-    def generate_web_sim(self, experiment):
+    def generate_web_sim(self):
         """Update atttributes for Simulation, based on new data from an
            Experiment instance.
 
            Parameters:
-           experiment(Experiment): one that has just been made from
-                                   ExperimentCreate view.
+           self(Experiment): the calling Experiment instance
 
            Returns:
            WebSimulation: a new instance of the class
@@ -196,7 +205,7 @@ class Experiment(models.Model):
         # self.next_person_id = self.pop_size
         virus = Virus(self.virus_name, self.reproductive_rate,
                       self.mortality_chance)
-        initial_infected = self.init_infected
+        initial_infected = self.initial_infected
         vacc_percentage = self.vaccination_percent
         # create the population
         # self.population = self._create_population()
