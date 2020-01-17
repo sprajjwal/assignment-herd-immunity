@@ -238,7 +238,8 @@ class Experiment(models.Model):
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
-        (self.init_report, self.final_summary) = self.run_and_collect(imager)
+        (self.init_report, self.final_summary) = (
+            web_sim.run_and_collect(imager))
 
 
 class TimeStep(models.Model, Visualizer):
