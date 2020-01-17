@@ -120,7 +120,8 @@ class WebSimulation(Simulation):
                                       self.get_alive_num()),
                                      self.current_infected(),
                                      self.get_dead(),
-                                     self.get_neither())
+                                     self.get_neither(),
+                                     experiment)
         image = ImageFile(file=graph)
         # return a TimeStep instance with these fields
         return TimeStep.objects.create(step_id=step_id,
