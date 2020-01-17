@@ -253,13 +253,6 @@ class TimeStep(models.Model):
                                               + " was created. Auto-generated "
                                               + "when the model " +
                                               "saves, used for ordering."))
-    """
-    def __init__(self, *args, **kwargs):
-        '''Resolve conflicts between superclasses.'''
-        self.y_label = None
-        self.title = None
-        return super(models.Model, self).__init__(self.y_label, self.title)
-    """
 
     def __str__(self):
         '''Return a unique phrase identifying the TimeStep.'''
