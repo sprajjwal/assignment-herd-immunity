@@ -63,14 +63,16 @@ class WebVisualizer(Visualizer):
         self.y_pos = np.arange(len(self.populations))
         self.num_alive = [vacc, infected, dead, neither]
         self.set_x_label(time_step)
+        plt.switch_backend('Agg')  # switch off the main thread
         plt.bar(self.y_pos, self.num_alive, align='center', alpha=0.5)
         # print('Do i get here?')
         plt.xticks(self.y_pos, self.populations)
         plt.ylabel(self.y_label)
         plt.xlabel(self.x_label)
         plt.title(self.title)
-        name = 'images/matplot' + str(time_step) + '.png'
+        name = 'static/images/matplot' + str(time_step) + '.png'
         plt.savefig(name)
+        plt.close()
         return name
         '''
         # fig = figure(figsize=(4.5, 2.5))

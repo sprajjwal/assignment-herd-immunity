@@ -94,12 +94,13 @@ class WebSimulation(Simulation):
         return (f'The simulation has ended after ' +
                 f'{counter} turns.')
 
-    def create_time_step(self, step_id, visualizer):
+    def create_time_step(self, step_id, visualizer, experiment):
         """Make a TimeStep instance out of the simulation step.
 
            Parameters:
            step_id(int): the numeric id of the time step
            visualizer(WebVisualizer): makes the bar graph
+           experiment(Experiment): the related Experiment instance
 
            Return:
            TimeStep: a single instance of the model, related to the calling
@@ -124,7 +125,7 @@ class WebSimulation(Simulation):
         # return a TimeStep instance with these fields
         return TimeStep.objects.create(step_id=step_id,
                                        description=description,
-                                       experiment=self, image=image)
+                                       experiment=experiment, image=image)
 
     def run_and_collect(self, visualizer):
         """This method should run the simulation until all requirements for
@@ -146,7 +147,7 @@ class WebSimulation(Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = self.create_time_step(time_step_counter, visualizer)
+            time_step = self.create_time_step(time_step_counter, visualizer, self)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
@@ -234,7 +235,8 @@ class Experiment(models.Model):
             web_sim.run_and_collect(imager))
 
 
-class TimeStep(models.Model, Visualizer):
+# class TimeStep(models.Model, Visualizer):
+class TimeStep(models.Model):
     '''A visual representation of a time step for a Simulation.'''
     step_id = models.IntegerField(help_text=(
         "What time step is this TimeStep for?"))
@@ -249,12 +251,13 @@ class TimeStep(models.Model, Visualizer):
                                               + " was created. Auto-generated "
                                               + "when the model " +
                                               "saves, used for ordering."))
-
+    """
     def __init__(self, *args, **kwargs):
         '''Resolve conflicts between superclasses.'''
         self.y_label = None
         self.title = None
         return super(models.Model, self).__init__(self.y_label, self.title)
+    """
 
     def __str__(self):
         '''Return a unique phrase identifying the TimeStep.'''
