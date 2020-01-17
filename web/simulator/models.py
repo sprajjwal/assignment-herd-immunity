@@ -82,7 +82,7 @@ class Experiment(models.Model):
         path_components = {'pk': self.pk}
         return reverse('simulator:experiment_detail', kwargs=path_components)
 
-    def update_fields(self, experiment):
+    def generate_web_sim(self, experiment):
         """Update atttributes for Simulation, based on new data from an
            Experiment instance.
 
@@ -234,7 +234,7 @@ class Experiment(models.Model):
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
         # update Simulation properties with form data
-        self.update_fields()
+        web_sim = self.generate_web_sim()
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
