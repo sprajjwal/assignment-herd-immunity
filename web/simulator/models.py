@@ -28,8 +28,18 @@ class WebSimulation(Simulation):
                 persons.append(person)
         return persons
 
-    def store_uninfected_persons(self, alive):
-        '''Return people who are alive, not vaccinated,and not infected.'''
+    def store_uninfected_persons(self, alive, vaccinated):
+        """Return people who are alive, not vaccinated, and not infected.
+
+           Parameters:
+           alive(list): a collection of Person objects
+           vaccinated(list): a collection of Person objects who are vaccinated
+
+           Returns:
+           persons(list): a collection of Person objects who're alive,
+                          uninfected, nor vaccinated
+
+        """
         persons = list()
         for person in alive:
             if person not in vaccinated and person.infection:
@@ -51,7 +61,7 @@ class WebSimulation(Simulation):
         # create a list of vaccinated persons
         vaccinated = self.store_vacc_persons(alive)
         # create a list of uninfected persons
-        uninfected = self.store_uninfected_persons(alive)
+        uninfected = self.store_uninfected_persons(alive, vaccinated)
         # init TimeStep description field
         return (f"Time step: {counter}, " +
                 f"total infected: {self.total_infected}, " +
@@ -84,11 +94,12 @@ class WebSimulation(Simulation):
         return (f'The simulation has ended after ' +
                 f'{counter} turns.')
 
-    def create_time_step(self, step_id):
+    def create_time_step(self, step_id, visualizer):
         """Make a TimeStep instance out of the simulation step.
 
            Parameters:
            step_id(int): the numeric id of the time step
+           visualizer(WebVisualizer): makes the bar graph
 
            Return:
            TimeStep: a single instance of the model, related to the calling
@@ -135,7 +146,7 @@ class WebSimulation(Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = self.create_time_step(time_step_counter)
+            time_step = self.create_time_step(time_step_counter, visualizer)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
