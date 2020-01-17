@@ -127,12 +127,13 @@ class WebSimulation(Simulation):
                                        description=description,
                                        experiment=experiment, image=image)
 
-    def run_and_collect(self, visualizer):
+    def run_and_collect(self, visualizer, experiment):
         """This method should run the simulation until all requirements for
            ending the simulation are met.
 
            Parameters:
            visualizer(Visualizer): constructs bar graph using matplotlib
+           experiment(Experiment): related to the TimeStep objects being made
 
            Returns:
            list: contains str:init_report and str:final_report
@@ -147,7 +148,7 @@ class WebSimulation(Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = self.create_time_step(time_step_counter, visualizer, self)
+            time_step = self.create_time_step(time_step_counter, visualizer, experiment)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
@@ -232,7 +233,7 @@ class Experiment(models.Model):
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
         (self.init_report, self.final_summary) = (
-            web_sim.run_and_collect(imager))
+            web_sim.run_and_collect(imager, self))
 
 
 # class TimeStep(models.Model, Visualizer):
