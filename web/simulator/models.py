@@ -9,7 +9,12 @@ from django.urls import reverse
 from django.core.files.images import ImageFile
 
 
-class Experiment(Simulation, models.Model):
+class WebSimulation(Simulation):
+    '''A Simulation class especially made to work with Django models.'''
+    pass
+
+
+class Experiment(models.Model):
     '''An experiment by the user to test the herd immunity of a population.'''
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
                              unique=True,
@@ -41,7 +46,7 @@ class Experiment(Simulation, models.Model):
                                     "Summary of what happened to the " +
                                     "population over the entire experiment."
                                     ))
-
+    """
     def __init__(self, pop_size=10, vacc_percentage=0.0,
                  virus=Virus('', 0.1, 0.1),
                  *args, **kwargs):
@@ -67,6 +72,7 @@ class Experiment(Simulation, models.Model):
                                                 vacc_percentage=0.0,
                                                 virus=Virus('', 0.1, 0.1))
         '''
+    """
     def __str__(self):
         '''Return the title of the Experiment instance.'''
         return self.title
@@ -76,18 +82,30 @@ class Experiment(Simulation, models.Model):
         path_components = {'pk': self.pk}
         return reverse('simulator:experiment_detail', kwargs=path_components)
 
-    def update_fields(self):
-        '''Update atttributes for Simulation, based on Experiment fields.'''
+    def update_fields(self, experiment):
+        """Update atttributes for Simulation, based on new data from an
+           Experiment instance.
+
+           Parameters:
+           experiment(Experiment): one that has just been made from
+                                   ExperimentCreate view.
+
+           Returns:
+           WebSimulation: a new instance of the class
+
+        """
         # init population related fields
-        self.pop_size = self.population_size
+        pop_size = self.population_size
         # init related fields, virus fields
-        self.next_person_id = self.pop_size
-        self.virus = Virus(self.virus_name, self.reproductive_rate,
+        # self.next_person_id = self.pop_size
+        virus = Virus(self.virus_name, self.reproductive_rate,
                            self.mortality_chance)
-        self.initial_infected = self.init_infected
-        self.vacc_percentage = self.vaccination_percent
+        initial_infected = self.init_infected
+        vacc_percentage = self.vaccination_percent
         # create the population
-        self.population = self._create_population()
+        # self.population = self._create_population()
+        return WebSimulation(pop_size, vacc_percentage,
+                             virus, initial_infected)
 
     def store_vacc_persons(self):
         '''Return people in the population who are alive and vaccinated.'''
