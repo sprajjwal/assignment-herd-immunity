@@ -162,7 +162,7 @@ class WebSimulation(Simulation):
 class Experiment(models.Model):
     '''An experiment by the user to test the herd immunity of a population.'''
     title = models.CharField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
-                             unique=True,
+                             unique=False,
                              help_text="Title of your experiment.")
     population_size = models.IntegerField(help_text=(
         "How large is the population?"))
