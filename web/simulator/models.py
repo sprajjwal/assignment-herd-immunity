@@ -62,7 +62,19 @@ class WebSimulation(Simulation):
         vaccinated = self.store_vacc_persons(alive)
         # create a list of uninfected persons
         uninfected = self.store_uninfected_persons(alive, vaccinated)
-        # init TimeStep description field
+        # return values to init TimeStep fields
+        return [
+            counter,
+            self.total_infected,
+            self.current_infected(),
+            self.vacc_percentage,
+            self.total_dead,
+            len(vaccinated),
+            len(alive),
+            len(uninfected),
+            self.get_neither()
+        ]
+        """
         return (f"Time step: {counter}, " +
                 f"total infected: {self.total_infected}, " +
                 f"current infected: {self.current_infected()}," +
@@ -73,6 +85,7 @@ class WebSimulation(Simulation):
                 f"alive: {len(alive)}, " +
                 f"uninfected: {len(uninfected)} " +
                 f"uninteracted {self.get_neither()}")
+        """
 
     def record_init_conditions(self):
         '''Return a str declaring population conditions before the epidemic.'''
@@ -121,7 +134,14 @@ class WebSimulation(Simulation):
         image = ImageFile(file=graph)
         # return a TimeStep instance with these fields
         return TimeStep.objects.create(step_id=step_id,
-                                       description=description,
+                                       total_infected=description[1],
+                                       current_infected=description[2],
+                                       vaccinated_population=description[3],
+                                       dead=description[4],
+                                       total_vaccinated=description[5],
+                                       alive=description[6],
+                                       uninfected=description[7],
+                                       uninteracted=description[8],
                                        experiment=experiment, image=image)
 
     def run_and_collect(self, visualizer, experiment):
@@ -189,17 +209,6 @@ class Experiment(models.Model):
                                       "Summary of what happened to the " +
                                       "population over the entire experiment."
                                      ))
-    """
-    init_report = models.TextField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
-                                   help_text=(
-                                    "Summary of initial conditions."))
-    final_summary = models.TextField(max_length=(
-                                    settings.EXPER_TITLE_MAX_LENGTH),
-                                     help_text=(
-                                      "Summary of what happened to the " +
-                                      "population over the entire experiment."
-                                     ))
-    """
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
@@ -242,7 +251,6 @@ class Experiment(models.Model):
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
         results = web_sim.run_and_collect(imager, self)
-        print(f'Results: {results}')
         self.init_report = results[0]
         self.final_summary = results[1]
         self.save()
@@ -257,7 +265,27 @@ class TimeStep(models.Model):
     image = models.ImageField(upload_to='images/',
                               help_text=("Graph representing changes to the " +
                                          "population during the TimeStep."))
-    description = models.TextField(help_text="Verbal summary of time step.")
+    # description = models.TextField(help_text="Verbal summary of time step.")
+    total_infected = models.IntegerField(help_text=(
+        "People who contracted the virus thus far in the experiment."
+    ))
+    current_infected = models.IntegerField(help_text=(
+        "People infected who are still alive in this step of the experiment."
+    ))
+    vaccinated_population = models.FloatField(help_text=(
+        "Percentage of the overall population which is currently vaccinated."
+    ))
+    dead = models.IntegerField(help_text="People thus far who have succumbed.")
+    total_vaccinated = models.IntegerField(help_text=(
+        "Amount of individuals who are now vaccinated in the population."
+    ))
+    alive = models.IntegerField(help_text="People who are currently alive.")
+    uninfected = models.IntegerField(help_text=(
+        "People who have not had any interaction with the virus."
+    ))
+    uninteracted = models.IntegerField(help_text=(
+        "Alive people in the"
+        + " population who are both uninfected, not vaccinated."))
     created = models.DateTimeField(auto_now_add=True,
                                    help_text=("The date and time this TimeStep"
                                               + " was created. Auto-generated "
