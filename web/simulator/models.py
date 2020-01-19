@@ -76,11 +76,20 @@ class WebSimulation(Simulation):
         ]
 
     def record_init_conditions(self):
-        '''Return a str declaring population conditions before the epidemic.'''
+        """Return a list declaring population conditions before the epidemic.
+
+            List elem 1(int): the total amount of infected people at the start
+            List elem 2(float): the percentage of vaccinated people in the
+                                population
+
+        """
+        return [self.total_infected, self.vacc_percentage]
+        """
         return (f"Time step 0, Total infected: {self.total_infected}, "
                 + f"current infected: {self.current_infected()}, " +
                 f"vaccinated percentage: {self.vacc_percentage}, " +
                 f"dead: {self.total_dead}")
+        """
 
     def record_final(self, counter):
         """Return a summary of the population conditions when simulation
@@ -150,7 +159,7 @@ class WebSimulation(Simulation):
         should_continue = None
         assert self.population[0]._id == 0
         # create the initial report
-        results.append(self.record_init_conditions())
+        results = self.record_init_conditions()
         while True:
             # make TimeStep instances as the simulation runs
             time_step = self.create_time_step(time_step_counter, visualizer,
