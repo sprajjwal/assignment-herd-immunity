@@ -28,7 +28,7 @@
     </ul>
     <hr>
     <h3>Final Results:</h3>
-    <p>The experiment ended after <strong>{{ experiment.total_steps }} turns.</strong></p>
+    <p>The experiment ended after <strong>{{ time_steps|length }} turn{{ time_steps|length|pluralize:"s" }}.</strong></p>
     <!-- display time steps -->
     <hr>
     <h3>Progression</h3>
