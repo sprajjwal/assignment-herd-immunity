@@ -106,15 +106,11 @@ class WebSimulation(Simulation):
            TimeStep: a single instance of the model, related to the calling
                      Experiment model
         """
-        # init TimeStep step_id field
-        # step_id = counter
-        # init TimeStep experiment field
-        # time_step.experiment = self
         # compute the logic for this step
         self.time_step(step_id)
         # get a verbal report of the time step results
         description = self.make_report(step_id)
-        # init TimeStep image field
+        # init TimeStep object
         graph = visualizer.bar_graph(step_id,
                                      (self.vacc_percentage *
                                       self.get_alive_num()),
@@ -149,7 +145,8 @@ class WebSimulation(Simulation):
         results.append(self.record_init_conditions())
         while True:
             # make TimeStep instances as the simulation runs
-            time_step = self.create_time_step(time_step_counter, visualizer, experiment)
+            time_step = self.create_time_step(time_step_counter, visualizer,
+                                              experiment)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
@@ -189,9 +186,20 @@ class Experiment(models.Model):
     init_report = models.TextField(help_text=(
                                     "Summary of initial conditions."))
     final_summary = models.TextField(help_text=(
-                                    "Summary of what happened to the " +
-                                    "population over the entire experiment."
-                                    ))
+                                      "Summary of what happened to the " +
+                                      "population over the entire experiment."
+                                     ))
+    """
+    init_report = models.TextField(max_length=settings.EXPER_TITLE_MAX_LENGTH,
+                                   help_text=(
+                                    "Summary of initial conditions."))
+    final_summary = models.TextField(max_length=(
+                                    settings.EXPER_TITLE_MAX_LENGTH),
+                                     help_text=(
+                                      "Summary of what happened to the " +
+                                      "population over the entire experiment."
+                                     ))
+    """
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
@@ -223,8 +231,8 @@ class Experiment(models.Model):
         vacc_percentage = self.vaccination_percent
         # create the population
         # self.population = self._create_population()
-        return WebSimulation(pop_size, vacc_percentage,
-                             virus, initial_infected)
+        return WebSimulation(pop_size, vacc_percentage, virus,
+                             initial_infected)
 
     def run_experiment(self):
         '''Runs through the experiment, and generates time step graphs.'''
@@ -233,11 +241,13 @@ class Experiment(models.Model):
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
-        (self.init_report, self.final_summary) = (
-            web_sim.run_and_collect(imager, self))
+        results = web_sim.run_and_collect(imager, self)
+        print(f'Results: {results}')
+        self.init_report = results[0]
+        self.final_summary = results[1]
+        self.save()
 
 
-# class TimeStep(models.Model, Visualizer):
 class TimeStep(models.Model):
     '''A visual representation of a time step for a Simulation.'''
     step_id = models.IntegerField(help_text=(

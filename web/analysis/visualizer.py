@@ -5,6 +5,8 @@ import numpy as np
 from pylab import *
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.backends.backend_pdf import PdfPages
+import boto3
+
 plt.rcdefaults()
 
 '''
@@ -67,46 +69,25 @@ class WebVisualizer(Visualizer):
            Return:
            name(str): name of the png file created, which shows the bar graph
         """
-        # pp = PdfPages('multipage.pdf')
-        # print(f'Can I print this? {plt}')
         self.populations = ["Vaccinated", "Infected", "Dead", "No Interaction"]
         self.y_pos = np.arange(len(self.populations))
         self.num_alive = [vacc, infected, dead, neither]
         self.set_x_label(time_step)
         plt.switch_backend('Agg')  # switching off the main thread
         plt.bar(self.y_pos, self.num_alive, align='center', alpha=0.5)
-        # print('Do i get here?')
         plt.xticks(self.y_pos, self.populations)
         plt.ylabel(self.y_label)
         plt.xlabel(self.x_label)
         plt.title(self.title)
-        name = ('static/images/matplot' + str(experiment.title) +
-                str(time_step) + '.png')
-        plt.savefig(name)
-        plt.close()
-        return name
-        '''
-        # fig = figure(figsize=(4.5, 2.5))
-        fig = plt.bar(graph1.y_pos, graph1.num_alive, align='center',
-                      alpha=0.5)
-        fig = plt.xticks(graph1.y_pos, graph1.populations)
-        fig = plt.ylabel(graph1.y_label)
-        fig = plt.xlabel(graph1.x_label)
-        fig = plt.title(graph1.title)
-
-        return self
-        '''
-        '''
-        fig = plt.figure()
-        plt.bar(y_pos, num_alive, align='center', alpha=0.5)
-        plt.xticks(y_pos, populations)
-        plt.ylabel(self.y_label)
-        plt.xlabel(self.x_label)
-        plt.title(self.title)
-        # save the figure as a pdf
-        # plt.savefig(pp, format='pdf')
+        # send file to AWS S3
+        bucket_name = 'herd-immunity-files'
+        file_name = ('static/images/matplot' + str(experiment.title) +
+                     str(time_step) + '.png')
+        s3client = boto3.client('s3')
+        # s3client.put_object(Bucket=bucket_name, Key=file_name, Body=plt)
+        # plt.savefig(name)
+        # plt.close()
         return plt
-        '''
 
 
 if __name__ == "__main__":
