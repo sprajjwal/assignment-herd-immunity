@@ -7,7 +7,7 @@ from django.views.generic.edit import (FormView, CreateView, ModelFormMixin,
 from simulator.models import Experiment, TimeStep
 from simulator.forms import ExperimentForm
 from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 
 class ExperimentCreate(CreateView):
