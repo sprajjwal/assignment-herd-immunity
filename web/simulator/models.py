@@ -76,34 +76,8 @@ class WebSimulation(Simulation):
         ]
 
     def record_init_conditions(self):
-        """Return a list declaring population conditions before the epidemic.
-
-            List elem 1(int): the total amount of infected people at the start
-
-        """
-        return [self.total_infected]
-        """
-        return (f"Time step 0, Total infected: {self.total_infected}, "
-                + f"current infected: {self.current_infected()}, " +
-                f"vaccinated percentage: {self.vacc_percentage}, " +
-                f"dead: {self.total_dead}")
-        """
-
-    def record_final_step_count(self, counter):
-        """Return a summary of the population conditions when simulation
-           finished.
-
-           Parameters:
-           counter(int): the numeric identifier of the current step
-
-           Returns:
-           int: the counter
-        """
-        return counter
-        """
-        return (f'The simulation has ended after ' +
-                f'{counter} turns.')
-        """
+        '''Return the amount of individuals infected at the start.'''
+        return self.total_infected
 
     def create_time_step(self, step_id, visualizer, experiment):
         """Make a TimeStep instance out of the simulation step.
@@ -159,8 +133,8 @@ class WebSimulation(Simulation):
         simulation_should_continue = 0
         should_continue = None
         assert self.population[0]._id == 0
-        # create the initial report
-        results = self.record_init_conditions()
+        # report number of people initially infected - return this value later
+        total_infected = self.record_init_conditions()
         while True:
             # make TimeStep instances as the simulation runs
             time_step = self.create_time_step(time_step_counter, visualizer,
@@ -169,10 +143,9 @@ class WebSimulation(Simulation):
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
-                results.append(self.record_final_step_count(time_step_counter))
                 break
             time_step_counter += 1
-        return results
+        return total_infected
 
 
 class Experiment(models.Model):
@@ -204,17 +177,6 @@ class Experiment(models.Model):
     total_infected = models.IntegerField(help_text=(
         "Amount of people who have contracted the disease at the start."
     ))
-    total_steps = models.IntegerField(help_text=(
-        "The number of steps for the duration of the whole experiment."
-    ))
-    """
-    init_report = models.TextField(help_text=(
-                                    "Summary of initial conditions."))
-    final_summary = models.TextField(help_text=(
-                                      "Summary of what happened to the " +
-                                      "population over the entire experiment."
-                                     ))
-    """
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
@@ -256,13 +218,8 @@ class Experiment(models.Model):
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
-        results = web_sim.run_and_collect(imager, self)
-        self.total_infected = results[0]
-        self.total_steps = results[1]
-        """
-        self.init_report = results[0]
-        self.final_summary = results[1]
-        """
+        total_infected = web_sim.run_and_collect(imager, self)
+        self.total_infected = total_infected
         self.save()
 
 
