@@ -91,7 +91,7 @@ class WebSimulation(Simulation):
                 f"dead: {self.total_dead}")
         """
 
-    def record_final(self, counter):
+    def record_final_step_count(self, counter):
         """Return a summary of the population conditions when simulation
            finished.
 
@@ -99,10 +99,13 @@ class WebSimulation(Simulation):
            counter(int): the numeric identifier of the current step
 
            Returns:
-           str: a verbal record of the TimeStep results
+           int: the counter
+        """
+        return counter
         """
         return (f'The simulation has ended after ' +
                 f'{counter} turns.')
+        """
 
     def create_time_step(self, step_id, visualizer, experiment):
         """Make a TimeStep instance out of the simulation step.
@@ -168,7 +171,7 @@ class WebSimulation(Simulation):
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
-                results.append(self.record_final(time_step_counter))
+                results.append(self.record_final_step_count(time_step_counter))
                 break
             time_step_counter += 1
         return results
