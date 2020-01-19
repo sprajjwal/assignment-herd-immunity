@@ -8,10 +8,27 @@
     <hr
     <!-- display initial settings of simulation -->
     <h3>Initial Conditions</h3>
-    <p>{{ experiment.init_report }}</p>
-
+    <strong>Population Stats:</strong>
+    <ul>
+        <li>
+            Time Step 0
+        </li>
+        <li>
+            Population Size: {{ experiment.population_size }}
+        </li>
+        <li>
+            Total Infected: {{ experiment.total_infected }}
+        </li>
+        <li>
+            Vaccinated Percentage: {{ experiment.vaccination_percent }}
+        </li>
+        <li>
+            Dead: 0
+        </li>
+    </ul>
+    <hr>
     <h3>Final Results:</h3>
-    <p>{{ experiment.final_summary }}</p>
+    <p>The experiment ended after <strong>{{ experiment.total_steps }} turns.</strong></p>
     <!-- display time steps -->
     <hr>
     <h3>Progression</h3>
@@ -20,6 +37,7 @@
     <strong>Stats for Time Step: {{ time_step.step_id }}</strong>
     <ul>
         <li>
+            <!-- Show bar charts, and pie charts -->
             <img src="#" alt="Plot Coming Soon">
         </li>
         <li>
@@ -54,7 +72,7 @@
     <!-- display final settings of simulation -->
     <div class="offset-md-5">
         <a href="/" class="btn btn-primary">Back to Home</a>
-
     </div>
+    <br><br>
 
 {% endblock %}
