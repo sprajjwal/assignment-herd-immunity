@@ -32,7 +32,7 @@
     <!-- display time steps -->
     <hr>
     <h3>Progression</h3>
-    <p><i>What happened at each stage of the epidemic?</i></p>
+    <p>What happened at each stage of the epidemic?</p>
     {% for time_step in time_steps %}
     <strong>Stats for Time Step: {{ time_step.step_id }}</strong>
     <ul>
@@ -42,7 +42,6 @@
         </li>
         <li>
             Total Infected: {{ time_step.total_infected }} <br>
-            <i>*this number is over the course of the entire simulation</i>
         </li>
         <li>
             Current Infected: {{ time_step.current_infected }}
@@ -64,12 +63,21 @@
         </li>
         <li>
             Uninteracted individuals: {{ time_step.uninteracted }} <br>
-            <i>"uninteracted" meaning individuals alive, not vaccinated, and not vaccinated</i>
         </li>
     </ul>
     {% endfor %}
     <hr>
-    <!-- display final settings of simulation -->
+    <h3>Notes:</h3>
+    <ol>
+        <li>
+            "Uninteracted": meaning individuals alive, not vaccinated, and not infected.
+        </li>
+        <li>
+            "Total infected": although displayed in each time step, this value is<br>
+             culmulative for the entire duration of the experiment.
+        </li>
+    </ol>
+    <!-- link to start another simulation -->
     <div class="offset-md-5">
         <a href="/" class="btn btn-primary">Back to Home</a>
     </div>
