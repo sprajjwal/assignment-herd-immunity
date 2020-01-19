@@ -79,11 +79,9 @@ class WebSimulation(Simulation):
         """Return a list declaring population conditions before the epidemic.
 
             List elem 1(int): the total amount of infected people at the start
-            List elem 2(float): the percentage of vaccinated people in the
-                                population
 
         """
-        return [self.total_infected, self.vacc_percentage]
+        return [self.total_infected]
         """
         return (f"Time step 0, Total infected: {self.total_infected}, "
                 + f"current infected: {self.current_infected()}, " +
@@ -203,12 +201,20 @@ class Experiment(models.Model):
         "At the beginning of the experiment, how many people in the " +
         "population are infected with the virus?"
     ))
+    total_infected = models.IntegerField(help_text=(
+        "Amount of people who have contracted the disease at the start."
+    ))
+    total_steps = models.IntegerField(help_text=(
+        "The number of steps for the duration of the whole experiment."
+    ))
+    """
     init_report = models.TextField(help_text=(
                                     "Summary of initial conditions."))
     final_summary = models.TextField(help_text=(
                                       "Summary of what happened to the " +
                                       "population over the entire experiment."
                                      ))
+    """
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
@@ -251,8 +257,12 @@ class Experiment(models.Model):
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
         results = web_sim.run_and_collect(imager, self)
+        self.total_infected = results[0]
+        self.total_steps = results[1]
+        """
         self.init_report = results[0]
         self.final_summary = results[1]
+        """
         self.save()
 
 
