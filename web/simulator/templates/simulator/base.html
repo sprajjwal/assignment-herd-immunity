@@ -24,5 +24,12 @@
         {% endblock %}
     </div>
 
+    <!-- Integration with Chart.js. Credit to Justin Mitchel of Coding for Entrepreneurs on https://github.com/codingforentrepreneurs/Django-Chart.js/blob/master/src/templates/base.html -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+    <script>
+    $(document).ready(function(){
+      {% block jquery %}{% endblock %}
+    })
+    </script>
 </body>
 </html>
