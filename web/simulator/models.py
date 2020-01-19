@@ -75,10 +75,6 @@ class WebSimulation(Simulation):
             self.get_neither()
         ]
 
-    def record_init_conditions(self):
-        '''Return the amount of individuals infected at the start.'''
-        return self.total_infected
-
     def create_time_step(self, step_id, visualizer, experiment):
         """Make a TimeStep instance out of the simulation step.
 
@@ -125,7 +121,7 @@ class WebSimulation(Simulation):
            experiment(Experiment): related to the TimeStep objects being made
 
            Returns:
-           list: contains str:init_report and str:final_report
+           NoneType: just to mark where the method ends
 
         """
         results = list()  # return value
@@ -133,10 +129,8 @@ class WebSimulation(Simulation):
         simulation_should_continue = 0
         should_continue = None
         assert self.population[0]._id == 0
-        # report number of people initially infected - return this value later
-        total_infected = self.record_init_conditions()
+        # make TimeStep instances as the simulation runs
         while True:
-            # make TimeStep instances as the simulation runs
             time_step = self.create_time_step(time_step_counter, visualizer,
                                               experiment)
             time_step.save()
@@ -145,7 +139,7 @@ class WebSimulation(Simulation):
                 simulation_should_continue += 1
                 break
             time_step_counter += 1
-        return total_infected
+        return None
 
 
 class Experiment(models.Model):
@@ -174,9 +168,6 @@ class Experiment(models.Model):
         "At the beginning of the experiment, how many people in the " +
         "population are infected with the virus?"
     ))
-    total_infected = models.IntegerField(help_text=(
-        "Amount of people who have contracted the disease at the start."
-    ))
 
     def __str__(self):
         '''Return the title of the Experiment instance.'''
@@ -201,13 +192,11 @@ class Experiment(models.Model):
         # init population related fields
         pop_size = self.population_size
         # init related fields, virus fields
-        # self.next_person_id = self.pop_size
         virus = Virus(self.virus_name, self.reproductive_rate,
                       self.mortality_chance)
         initial_infected = self.initial_infected
         vacc_percentage = self.vaccination_percent
         # create the population
-        # self.population = self._create_population()
         return WebSimulation(pop_size, vacc_percentage, virus,
                              initial_infected)
 
@@ -218,9 +207,7 @@ class Experiment(models.Model):
         # run through time steps, collect visuals and reports
         imager = WebVisualizer("Number of Survivors",
                                "Herd Immunity Defense Against Disease Spread")
-        total_infected = web_sim.run_and_collect(imager, self)
-        self.total_infected = total_infected
-        self.save()
+        web_sim.run_and_collect(imager, self)
 
 
 class TimeStep(models.Model):
