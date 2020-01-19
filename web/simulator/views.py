@@ -8,6 +8,7 @@ from simulator.models import Experiment, TimeStep
 from simulator.forms import ExperimentForm
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
+from rest_framework.views import APIView
 
 
 class ExperimentCreate(CreateView):
@@ -46,3 +47,19 @@ class ExperimentDetail(DetailView):
             'time_steps': time_steps
         }
         return render(request, self.template_name, context)
+
+
+class ListTimeStepData(APIView):
+    """
+    View to list the fields and values of all time steps related to an
+    Experiment.
+    """
+    authentication_classes = list()
+    permission_classes = list()
+
+    def get(self, request, format=None):
+        """
+        Return a list of all time steps using JSON.
+        """
+        usernames = [user.username for user in User.objects.all()]
+        return Response(usernames)
