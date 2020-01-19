@@ -23,28 +23,29 @@
             <img src="#" alt="Plot Coming Soon">
         </li>
         <li>
-            Total Infected: {{ i }}
+            Total Infected: {{ time_step.total_infected }} <br>
+            <i>*this number is over the course of the entire simulation</i>
         </li>
         <li>
-            Current Infected: {{i }}
+            Current Infected: {{ time_step.current_infected }}
         </li>
         <li>
-            Vaccination Percentage: {{ i }}
+            Vaccination Percentage: {{ time_step.vaccinated_population }}
         </li>
         <li>
-            Dead: {{i  }}
+            Dead: {{ time_step.dead }}
         </li>
         <li>
-            Total Vaccinated: {{ i }}
+            Total Vaccinated: {{ time_step.total_vaccinated }}
         </li>
         <li>
-            Total Alive: {{ i  }}
+            Total Alive: {{ time_step.alive  }}
         </li>
         <li>
-            Unifected individuals: {{ i }}
+            Unifected individuals: {{ time_step.uninfected }}
         </li>
         <li>
-            Uninteracted individuals: {{ i }} <br>
+            Uninteracted individuals: {{ time_step.uninteracted }} <br>
             <i>"uninteracted" meaning individuals alive, not vaccinated, and not vaccinated</i>
         </li>
     </ul>
