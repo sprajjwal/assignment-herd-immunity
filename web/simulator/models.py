@@ -74,18 +74,6 @@ class WebSimulation(Simulation):
             len(uninfected),
             self.get_neither()
         ]
-        """
-        return (f"Time step: {counter}, " +
-                f"total infected: {self.total_infected}, " +
-                f"current infected: {self.current_infected()}," +
-                f" vaccinated %: "
-                + f"{self.vacc_percentage}, " +
-                f"dead: {self.total_dead},  " +
-                f"total vaccinated: {len(vaccinated)}, " +
-                f"alive: {len(alive)}, " +
-                f"uninfected: {len(uninfected)} " +
-                f"uninteracted {self.get_neither()}")
-        """
 
     def record_init_conditions(self):
         '''Return a str declaring population conditions before the epidemic.'''
