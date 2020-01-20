@@ -68,6 +68,10 @@ class ListTimeStepData(APIView):
            Returns:
            HttpResponse: the view of the detail template
         """
+        data = {
+            "count": Experiment.objects.all().count()
+        }
+        """
         experiment = Experiment.objects.get(pk=pk)
         time_steps = TimeStep.objects.filter(experiment=experiment)
         data = {
@@ -96,4 +100,5 @@ class ListTimeStepData(APIView):
                 } for time_step in time_steps
             ]
         }
+        """
         return Response(data)
