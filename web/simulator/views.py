@@ -50,7 +50,7 @@ class ExperimentDetail(DetailView):
 class ExperimentList(ListView):
     '''List all the Experiments that have been conducted by users.'''
     model = Experiment
-    template_name = 'simulator/index.html'
+    template_name = 'simulator/list.html'
 
     def get(self, request):
         """Get a list of all Experiment instances. """
@@ -59,6 +59,10 @@ class ExperimentList(ListView):
           'experiments': experiments
         })
 
+
+def show_landing(request):
+    '''Render the landing page of the website.'''
+    return render(request, 'simulator/index.html')
 
 
 def show_about_page(request):
