@@ -87,33 +87,32 @@
     <h5 class="text-center">Herd Immunity Resistance to {{ experiment.virus_name }} Outbreak</h5>
     <!-- Display of Pie Chart -->
     <!--{#<div url-endpoint="{% url 'api:data' experiment.id %}">#}-->
-        <canvas id="pieChart" width="400" height="400"></canvas>
+        <canvas id="barChart" width="400" height="400"></canvas>
         <script>
             $(document).ready(function(){
                 {% block jquery %}
                 // get the data on the TimeStep from the API, using AJAX
-                var endpoint = '/api/{{experiment.id}}/chart/data/'
-                var plotData = [ ]
-                var plotLabels = [];
+                let endpoint = '/api/{{experiment.id}}/chart/data/'
+                let plotData = []
+                let plotLabels = [];
                 $.ajax({
                     method: "GET",
                     url: endpoint,
                     success: function(data){
                         plotLabels = data.labels
                         plotData = data.pop_sizes
-                        pieChart()
+                        barChart()
                     },
                     error: function(error_data){
                         console.log(error_data)
                     }
                 })
-                // make pie chart
-                function pieChart() {
-                    var ctx = document.getElementById('pieChart').getContext('2d');
-                    var pieChart = new Chart(ctx, {
-                    type: 'bar',
+                // make bar chart
+                function barChart() {
+                    let ctx = document.getElementById('barChart').getContext('2d');
+                    let barChart = new Chart(ctx, {
+                    type: "bar",
                     data: {
-                        labels: plotLabels,
                         datasets: [{
                             label: '# of People',
                             data: plotData,
@@ -130,7 +129,8 @@
                                 'rgba(75, 192, 192, 1)',
                             ],
                             borderWidth: 1
-                        }]
+                        }],
+                        labels: plotLabels
                     },
                     options: {
                         scales: {
@@ -143,9 +143,9 @@
                     }
                     });
                 }
-                {% endblock %}
-            })
-        </script>
+            {% endblock %}
+        })
+    </script>
     <!--</div>-->
     <hr>
     <h3>Notes:</h3>
