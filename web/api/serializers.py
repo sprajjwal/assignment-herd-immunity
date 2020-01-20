@@ -11,5 +11,5 @@ class ExperimentSerializer(ModelSerializer):
 
 class TimeStepSerializer(ModelSerializer):
     class Meta:
-        model = TimeStepSerializer
+        model = TimeStep
         fields = '__all__'
