@@ -13,7 +13,7 @@ class ExperimentCreate(CreateView):
     '''User is able to make a new experiment on the system.'''
     model = Experiment
     form_class = ExperimentForm
-    template_name = 'simulator/index.html'
+    template_name = 'simulator/create.html'
 
     def form_valid(self, form, *args, **kwargs):
         '''Adds model instances to the db as appropriate.'''
@@ -45,6 +45,11 @@ class ExperimentDetail(DetailView):
             'time_steps': time_steps
         }
         return render(request, self.template_name, context)
+
+
+class ExperimentList(ListView):
+    '''List all the Experiments that have been conducted by users.'''
+    pass
 
 
 def show_about_page(request):
