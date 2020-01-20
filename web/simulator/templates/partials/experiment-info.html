@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Population Stats:</strong>
+            <ul>
+                <li>
+                    Time Step 0
+                </li>
+                <li>
+                    Population Size: {{ experiment.population_size }}
+                </li>
+                <li>
+                    Initially Infected: {{ experiment.initial_infected }}
+                </li>
+                <li>
+                    Vaccinated Percentage: {{ experiment.vaccination_percent }}
+                </li>
+                <li>
+                    Dead: 0
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <strong>Virus Info:</strong>
+            <ul>
+                <li>
+                    Name: {{ experiment.virus_name }}
+                </li>
+                <li>
+                    Reproductive Rate: {{ experiment.reproductive_rate }}
+                </li>
+                <li>
+                    Mortality Rate: {{ experiment.mortality_chance }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

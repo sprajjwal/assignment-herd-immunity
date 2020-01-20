@@ -4,14 +4,23 @@
 
 {% block content %}
     <!-- display title of page, and number of simulations to display -->
-    <h1>Past Simulations {% if experiments %}<small class="text-muted">({{ experiments|length }})</small>{% endif %}</h1>
+    <h1>Past Simulations <small class="text-muted">({{ experiments|length }})</small></h1>
     <p>Thank you for your curiosity! <br>
-        The following is a list of all experiments that others have ran on this site so far.</p>
+        The following is a list of all experiments that others have ran on this site so far. <br>
+        Please use this site as a tool to do your own research, and to make your own conclusions about public health.
+    </p>
 
     <ul>
         {% for experiment in experiments %}
             <li>
                 <h3>{{ experiment.title }}</h3>
+                {% include 'partials/experiment-info.html' %}
+                <div class="row ml-auto">
+                    <div class="offset-md-7">
+                        <a class="btn btn-info" href="{% url 'simulator:experiment_detail' experiment.id %}">See In-Depth</a>
+                    </div>
+                </div>
+                <br>
             </li>
         {% endfor %}
     </ul>
