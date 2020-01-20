@@ -176,7 +176,7 @@ class Experiment(models.Model):
     def get_absolute_url(self):
         '''Returns a path to the experimental results after form submission.'''
         path_components = {'pk': self.pk}
-        return reverse('simulator:experiment_detail', kwargs=path_components)
+        return reverse('simulator:simulation_detail', kwargs=path_components)
 
     def generate_web_sim(self):
         """Update atttributes for Simulation, based on new data from an

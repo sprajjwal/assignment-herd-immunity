@@ -1,5 +1,4 @@
 <!-- simulator/templates/simulator/list.html -->
-
 {% extends "simulator/base.html" %}
 
 {% block content %}
@@ -17,7 +16,7 @@
                 {% include 'partials/experiment-info.html' %}
                 <div class="row ml-auto">
                     <div class="offset-md-7">
-                        <a class="btn btn-info" href="{% url 'simulator:experiment_detail' experiment.id %}">See In-Depth</a>
+                        <a class="btn btn-info" href="{% url 'simulator:simulation_detail' experiment.id %}">See In-Depth</a>
                     </div>
                 </div>
                 <br>

@@ -14,5 +14,5 @@ urlpatterns = [
     path('add-experiment/', ExperimentCreate.as_view(),
          name='simulation_creator'),
     path('about/', show_about_page, name='about'),
-    path('<int:pk>/', ExperimentDetail.as_view(), name='experiment_detail'),
+    path('<int:pk>/', ExperimentDetail.as_view(), name='simulation_detail'),
 ]
