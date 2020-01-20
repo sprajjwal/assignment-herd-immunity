@@ -1,1 +1,22 @@
 <!-- simulator/templates/simulator/index.html -->
+
+{% extends "simulator/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-white">
+        <h1 class="display-1 text-center">Don't Believe in Vaccines?</h1>
+        <h2 class="text-center">Let's put that belief to the test.</h2>
+        <hr class="my-4">
+        <h3 class="text-center">Herd Immunity Simulator</h3>
+        <br><br>
+        <div class="row justify-content-center">
+            <div class="offset-md-1 col-md-5">
+                <!-- Link to ExperimentCreate -->
+                <a class="btn btn-primary btn-lg" href="{% url 'simulator:simulation_creator'%}" role="button">Run your own experiment</a>
+            </div>
+            <div class="col-md-5">
+                <!-- Link to ExperimentList -->
+                <a class="btn btn-primary btn-lg" href="#" role="button">See Other's Results</a>
+            </div>
+        </div>
+{% endblock %}

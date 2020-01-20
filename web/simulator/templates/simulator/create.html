@@ -5,26 +5,25 @@
 <!-- user sees a form for inputting disease data -->
 
 {% block content %}
+    <div class="row">
+        <div class="col-md-10">
+            <!-- display form -->
+            <h1>Herd Immunity Simulation</h1>
 
-<div class="row">
-    <div class="col-md-10">
-        <!-- display form -->
-        <h1>Herd Immunity Simulation</h1>
-
-        <h3>Please fill out the form below.</h3>
-        <p>
-            <i>
-                Is our population ready for the outbreak?
-            </i>
-        </p>
-        <!-- form for experimental values -->
-        <form class="form-group" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" value="See it Play Out!">
-        </form>
-        <br>
+            <h3>Please fill out the form below.</h3>
+            <p>
+                <i>
+                    Is our population ready for the outbreak?
+                </i>
+            </p>
+            <!-- form for experimental values -->
+            <form class="form-group" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-primary" value="See it Play Out!">
+            </form>
+            <br>
+        </div>
     </div>
-</div>
 
 {% endblock %}
