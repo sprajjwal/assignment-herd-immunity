@@ -1,9 +1,13 @@
 // bar chart of alive people
-var ctx = document.getElementById('barChartOne').getContext('2d');
+var ctx = document.getElementById('barChart{{loop.index}}').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Vaccinated", "Infected", "Dead", "No Interaction"],
+        labels: ["Dead",
+                 "Alive - Vaccinated",
+                 "Alive - Uninfected",
+                 "Alive - No Interaction"
+            ],
         datasets: [{
             label: '# of People',
             data: [

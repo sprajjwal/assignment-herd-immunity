@@ -46,9 +46,6 @@
             </div>
         </div>
     </div>
-    <hr>
-    <h3>Final Results:</h3>
-    <p>The experiment ended after <strong>{{ time_steps|length }} turn{{ time_steps|length|pluralize:"s" }}.</strong></p>
     <!-- display time steps -->
     <hr>
     <h3>Progression</h3>
@@ -85,6 +82,18 @@
         </tbody>
     </table>
     <hr>
+    <h3>Final Results</h3>
+    <p>Here is The Breakdown of the <strong>Population, at the End of the Simulation:</strong></p>
+    <!-- Display of Pie Chart -->
+    <div url-endpoint="{% url 'api:data' experiment.id %}">
+        <canvas id="barChart" width="400" height="400"></canvas>
+        <script>
+            {% block jquery %}
+                {% include 'partials/pie-chart.html' %}
+            {% endblock %}
+        </script>
+    </div>
+    <hr>
     <h3>Notes:</h3>
     <ol>
         <li>
@@ -95,79 +104,6 @@
              culmulative for the entire duration of the experiment.
         </li>
     </ol>
-    <!-- Makibg Graphs for each stage of the experiment -->
-    <div url-endpoint="{% url 'api:data' experiment.id %}">
-        {% for time_step in time_steps %}
-            <!-- #1 a bar graph alive people breakdown -->
-            <canvas id="barChartOne" width="400" height="400"></canvas>
-            <script>
-                {% block jquery %}
-                // AJAX call to get the data
-                var endpoint = '/api/{{experiment.id}}/chart/data/'
-                var defaultData = []
-                var labels = [];
-                $.ajax({
-                    method: "GET",
-                    url: endpoint,
-                    success: function(data){
-                        //  use loop.index to get just one time step document
-                        defaultData = {};
-                        setChart();
-                    },
-                    error: function(error_data){
-                        console.log("error")
-                        console.log(error_data)
-                    }
-                });
-
-                function setChart(){
-                    // bar chart of alive people
-                    var ctx = document.getElementById('barChartOne').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: ["Vaccinated", "Infected", "Dead", "No Interaction"],
-                            datasets: [{
-                                label: '# of People',
-                                data: [
-                                    {{time_step.total_vaccinated}},
-                                    {{time_step.total_infected}},
-                                    {{time_step.dead}},
-                                    {{time_step.uninteracted}}
-                                ],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                }
-                    {% include 'partials/bar-of-alive.html' %}
-                {% endblock %}
-            </script>
-            <!-- #2 Pie chart of dead versus alive -->
-            <!-- #3 Pie chart of alive people breakdown -->
-        {% endfor %}
-    </div>
     <br>
     <!-- link to start another simulation -->
     <div class="offset-md-10">
