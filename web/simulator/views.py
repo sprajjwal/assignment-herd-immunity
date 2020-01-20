@@ -82,7 +82,18 @@ class ListTimeStepData(APIView):
             },
             "time_steps": [
                 {
-                    "": 9
-                } for time_step in time_steps]
+                    "step_id": time_step.step_id,
+                    "experiment": time_step.experiment,
+                    "image": time_step.image,
+                    "total_infected": time_step.total_infected,
+                    "current_infected": time_step.current_infected,
+                    "vaccinated_population": time_step.vaccinated_population,
+                    "dead": time_step.dead,
+                    "total_vaccinated": time_step.total_vaccinated,
+                    "alive": time_step.alive,
+                    "uninfected": time_step.uninfected,
+                    "uninteracted": time_step.uninteracted
+                } for time_step in time_steps
+            ]
         }
         return Response(data)
