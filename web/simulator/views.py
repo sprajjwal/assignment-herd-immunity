@@ -45,3 +45,8 @@ class ExperimentDetail(DetailView):
             'time_steps': time_steps
         }
         return render(request, self.template_name, context)
+
+
+def show_about_page(request):
+    '''Render the About page of the site, so users can get more info.'''
+    return render(request, 'simulator/info.html')
