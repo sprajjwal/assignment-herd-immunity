@@ -5,7 +5,6 @@ from analysis.virus import Virus
 from web import settings
 from django.utils import timezone
 from django.urls import reverse
-from django.core.files.images import ImageFile
 
 
 class Experiment(models.Model):
