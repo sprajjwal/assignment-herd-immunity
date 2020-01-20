@@ -49,7 +49,16 @@ class ExperimentDetail(DetailView):
 
 class ExperimentList(ListView):
     '''List all the Experiments that have been conducted by users.'''
-    pass
+    model = Experiment
+    template_name = 'simulator/index.html'
+
+    def get(self, request):
+        """Get a list of all Experiment instances. """
+        experiments = self.get_queryset().all()
+        return render(request, self.template_name, {
+          'experiments': experiments
+        })
+
 
 
 def show_about_page(request):
