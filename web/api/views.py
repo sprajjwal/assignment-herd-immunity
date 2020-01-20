@@ -6,7 +6,7 @@ from .serializers import TimeStepSerializer
 from simulator.models import Experiment, TimeStep
 
 
-class ListTimeStepData(APIView):
+class TimeStepData(APIView):
     """
     View to list the fields and values of all time steps related to an
     Experiment.
@@ -26,9 +26,12 @@ class ListTimeStepData(APIView):
            Returns:
            HttpResponse: the view of the detail template
         """
-        time_steps = TimeStep.objects.filter(experiment__id=pk)
+        # get all Time Steps related to the Experiment, return the last
+        time_step = (
+            TimeStep.objects.filter(experiment__id=pk).order_by('pk').last()
+        )
         data = {
-            "time_steps": [
+            "time_steps":
                 {
                     "step_id": time_step.step_id,
                     "total_infected": time_step.total_infected,
@@ -39,7 +42,6 @@ class ListTimeStepData(APIView):
                     "alive": time_step.alive,
                     "uninfected": time_step.uninfected,
                     "uninteracted": time_step.uninteracted
-                } for time_step in time_steps
-            ]
+                }
         }
         return Response(data)
