@@ -24,7 +24,7 @@ class Visualizer:
 
     def set_x_label(self, time_step):
         '''Define x_label for bar graph every time step.'''
-        self.x_label = f'Population Sizes During Time Step {time_step}
+        self.x_label = f'Population Sizes During Time Step {time_step}'
 
 
 class WebVisualizer(Visualizer):
