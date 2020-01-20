@@ -85,68 +85,9 @@
     <h3>Final Results</h3>
     <p>Here is the breakdown of the population, at the end of the experiment:</p>
     <h5 class="text-center">Herd Immunity Resistance to {{ experiment.virus_name }} Outbreak</h5>
-    <!-- Display of Pie Chart -->
-    <!--{#<div url-endpoint="{% url 'api:data' experiment.id %}">#}-->
+    <!-- Display of Bar Chart -->
         <canvas id="barChart" width="400" height="400"></canvas>
-        <script>
-            $(document).ready(function(){
-                {% block jquery %}
-                // get the data on the TimeStep from the API, using AJAX
-                let endpoint = '/api/{{experiment.id}}/chart/data/'
-                let plotData = []
-                let plotLabels = [];
-                $.ajax({
-                    method: "GET",
-                    url: endpoint,
-                    success: function(data){
-                        plotLabels = data.labels
-                        plotData = data.pop_sizes
-                        barChart()
-                    },
-                    error: function(error_data){
-                        console.log(error_data)
-                    }
-                })
-                // make bar chart
-                function barChart() {
-                    let ctx = document.getElementById('barChart').getContext('2d');
-                    let barChart = new Chart(ctx, {
-                    type: "bar",
-                    data: {
-                        datasets: [{
-                            label: '# of People',
-                            data: plotData,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                            ],
-                            borderWidth: 1
-                        }],
-                        labels: plotLabels
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                    });
-                }
-            {% endblock %}
-        })
-    </script>
-    <!--</div>-->
+        {% include 'partials/pie-chart.html' %}
     <hr>
     <h3>Notes:</h3>
     <ol>
