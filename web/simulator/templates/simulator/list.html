@@ -1,0 +1,18 @@
+<!-- simulator/templates/simulator/list.html -->
+
+{% extends "simulator/base.html" %}
+
+{% block content %}
+    <!-- display title of page, and number of simulations to display -->
+    <h1>Past Simulations {% if experiments %}<small class="text-muted">({{ experiments|length }})</small>{% endif %}</h1>
+    <p>Thank you for your curiosity! <br>
+        The following is a list of all experiments that others have ran on this site so far.</p>
+
+    <ul>
+        {% for experiment in experiments %}
+            <li>
+                <h3>{{ experiment.title }}</h3>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
