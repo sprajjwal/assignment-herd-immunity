@@ -43,7 +43,6 @@ class TimeStepData(APIView):
                     time_step.total_vaccinated,
                     time_step.uninfected,
                     time_step.uninteracted
-                ],
-                "total_pop_size": population_size
+                ]
         }
         return Response(data)
