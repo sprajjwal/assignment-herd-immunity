@@ -2,7 +2,6 @@ from django.db import models
 from analysis.person import Person
 from analysis.simulation import Simulation
 from analysis.virus import Virus
-from analysis.visualizer import Visualizer, WebVisualizer
 from web import settings
 from django.utils import timezone
 from django.urls import reverse
@@ -75,12 +74,11 @@ class WebSimulation(Simulation):
             self.get_neither()
         ]
 
-    def create_time_step(self, step_id, visualizer, experiment):
+    def create_time_step(self, step_id, experiment):
         """Make a TimeStep instance out of the simulation step.
 
            Parameters:
            step_id(int): the numeric id of the time step
-           visualizer(WebVisualizer): makes the bar graph
            experiment(Experiment): the related Experiment instance
 
            Return:
@@ -91,15 +89,6 @@ class WebSimulation(Simulation):
         self.time_step(step_id)
         # get a verbal report of the time step results
         description = self.make_report(step_id)
-        # init TimeStep object
-        graph = visualizer.bar_graph(step_id,
-                                     (self.vacc_percentage *
-                                      self.get_alive_num()),
-                                     self.current_infected(),
-                                     self.get_dead(),
-                                     self.get_neither(),
-                                     experiment)
-        image = ImageFile(file=graph)
         # return a TimeStep instance with these fields
         return TimeStep.objects.create(step_id=step_id,
                                        total_infected=description[1],
@@ -110,14 +99,13 @@ class WebSimulation(Simulation):
                                        alive=description[6],
                                        uninfected=description[7],
                                        uninteracted=description[8],
-                                       experiment=experiment, image=image)
+                                       experiment=experiment)
 
-    def run_and_collect(self, visualizer, experiment):
+    def run_and_collect(self, experiment):
         """This method should run the simulation until all requirements for
            ending the simulation are met.
 
            Parameters:
-           visualizer(Visualizer): constructs bar graph using matplotlib
            experiment(Experiment): related to the TimeStep objects being made
 
            Returns:
@@ -131,8 +119,7 @@ class WebSimulation(Simulation):
         assert self.population[0]._id == 0
         # make TimeStep instances as the simulation runs
         while True:
-            time_step = self.create_time_step(time_step_counter, visualizer,
-                                              experiment)
+            time_step = self.create_time_step(time_step_counter, experiment)
             time_step.save()
             # decide to continue
             if self._simulation_should_continue():
@@ -204,10 +191,8 @@ class Experiment(models.Model):
         '''Runs through the experiment, and generates time step graphs.'''
         # update Simulation properties with form data
         web_sim = self.generate_web_sim()
-        # run through time steps, collect visuals and reports
-        imager = WebVisualizer("Number of Survivors",
-                               "Herd Immunity Defense Against Disease Spread")
-        web_sim.run_and_collect(imager, self)
+        # run through time steps
+        web_sim.run_and_collect(self)
 
 
 class TimeStep(models.Model):
@@ -216,10 +201,6 @@ class TimeStep(models.Model):
         "What time step is this TimeStep for?"))
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE,
                                    help_text="The related Experiment model.")
-    image = models.ImageField(upload_to='images/',
-                              help_text=("Graph representing changes to the " +
-                                         "population during the TimeStep."))
-    # description = models.TextField(help_text="Verbal summary of time step.")
     total_infected = models.IntegerField(help_text=(
         "People who contracted the virus thus far in the experiment."
     ))
