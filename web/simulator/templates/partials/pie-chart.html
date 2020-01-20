@@ -1,6 +1,6 @@
 // bar chart of alive people
-var ctx = document.getElementById('barChart{{loop.index}}').getContext('2d');
-var myChart = new Chart(ctx, {
+    var ctx = document.getElementById('barChart{{loop.index}}').getContext('2d');
+    var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ["Dead",
@@ -30,7 +30,7 @@ var myChart = new Chart(ctx, {
         ],
         borderWidth: 1
     }]
-},
+    },
     options: {
         scales: {
             yAxes: [{

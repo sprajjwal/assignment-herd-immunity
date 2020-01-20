@@ -30,18 +30,20 @@ class TimeStepData(APIView):
         time_step = (
             TimeStep.objects.filter(experiment__id=pk).order_by('pk').last()
         )
+        population_size = time_step.alive + time_step.dead
         data = {
-            "time_steps":
-                {
-                    "step_id": time_step.step_id,
-                    "total_infected": time_step.total_infected,
-                    "current_infected": time_step.current_infected,
-                    "vaccinated_population": time_step.vaccinated_population,
-                    "dead": time_step.dead,
-                    "total_vaccinated": time_step.total_vaccinated,
-                    "alive": time_step.alive,
-                    "uninfected": time_step.uninfected,
-                    "uninteracted": time_step.uninteracted
-                }
+                "labels": [
+                    "Dead",
+                    "Alive - Vaccinated",
+                    "Alive - Uninfected",
+                    "Alive - No Interaction"
+                ],
+                "pop_sizes": [
+                    time_step.dead,
+                    time_step.total_vaccinated,
+                    time_step.uninfected,
+                    time_step.uninteracted
+                ],
+                "total_pop_size": population_size
         }
         return Response(data)
