@@ -3,9 +3,35 @@
 
 {% block content %}
     <div class="container">
-        <h1>Why Should You Care About Herd Immunity?</h1>
-        <h3>Check out the resources below to learn more!</h3>
-
+        <h1>About Herd Immunity</h1>
+        <h3>Rules</h3>
+        <h5>Please read below to better understand how the simulation works.</h5>
+        <ol>
+            <li>
+                A sick person only has a chance at infecting healthy, unvaccinated people they encounter.
+            </li>
+            <li>
+                An infected person cannot infect a vaccinated person.
+            </li>
+            <li>
+                At the end of a time step, an infected person will either die of the infection or get better.  The chance they will die is the percentage chance represented by the virus mortality rate.
+            </li>
+            <li>
+                For the sake of simplicity, if the person does not die, we will consider them immune to the virus.
+            </li>
+            <li>
+                Dead people can no longer be infected, either. People who die no longer count as infected.
+            </li>
+            <li>
+                All state changes for a person should occur at the **end** of a time step, after all infected persons have finished all of their interactions.
+            </li>
+            <li>
+                The state of an individual who starts out at the beginning of a time step as infected, is resolved by determining if they survive or succumb to the illness.
+            </li>
+        </ol>
+        <p>(Written based off the ReadMe instructions produced by Alan Davis and Jess Dahmen, on <a href="https://github.com/Make-School-Courses/CS-1.1-Intro-to-Programming/tree/master/Projects/herdimmunity_starter_term2_2019">the Herd Immunity starter code GitHub repository</a>).</p>
+        <h3>What is Herd Immunity, and Why Should I Care?</h3>
+        <h5>Check out the resources below to learn more!</h5>
         <ol>
             <li>
                 <!-- display a cool informational videos and links -->

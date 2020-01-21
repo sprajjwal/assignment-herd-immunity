@@ -13,7 +13,7 @@ This ReadMe (project description and specs) is a draft to help you get started o
 
 ### Rules
 
-1. A sick person only has a chance at infecting healthy, unvaccinated people they encounter.  
+1. A sick person only has a chance at infecting healthy, unvaccinated people they encounter.
 1. An infected person cannot infect a vaccinated person.  This still counts as an interaction.  
 1. An infected person cannot infect someone that is already infected.  This still counts as an interaction.
 1. At the end of a time step, an infected person will either die of the infection or get better.  The chance they will die is the percentage chance stored in mortality_rate.  
