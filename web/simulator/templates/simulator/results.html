@@ -15,6 +15,7 @@
     <h3>Progression</h3>
     <p>What happened at each stage of the epidemic?</p>
     <!-- Table of Time Steps -->
+    {% if time_steps %}
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -52,6 +53,12 @@
     <!-- Display of Bar Chart -->
         <canvas id="barChart" width="400" height="400"></canvas>
         {% include 'partials/pie-chart.html' %}
+    {% else %}
+    <!-- alert that there are no time steps in this experiment -->
+    <div class="alert alert-info" role="alert">
+        Your population is safe! The virus did not cause an epidemic.
+    </div>
+    {% endif %}
     <hr>
     <h3>Notes:</h3>
     <ol>
