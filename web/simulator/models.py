@@ -77,7 +77,6 @@ class Experiment(models.Model):
                 step_id=ts.get('step_id'),
                 total_infected=ts.get('total_infected'),
                 current_infected=ts.get('current_infected'),
-                vaccinated_population=ts.get('vaccinated_population'),
                 dead=ts.get('dead'),
                 total_vaccinated=ts.get('total_vaccinated'),
                 alive=ts.get('alive'),
@@ -99,9 +98,6 @@ class TimeStep(models.Model):
     ))
     current_infected = models.IntegerField(help_text=(
         "People infected who are still alive in this step of the experiment."
-    ))
-    vaccinated_population = models.FloatField(help_text=(
-        "Percentage of the overall population which is currently vaccinated."
     ))
     dead = models.IntegerField(help_text="People thus far who have succumbed.")
     total_vaccinated = models.IntegerField(help_text=(

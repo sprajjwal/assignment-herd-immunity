@@ -428,7 +428,6 @@ class WebSimulation(Simulation):
             counter,
             self.total_infected,
             self.current_infected(),
-            self.vacc_percentage,
             self.total_dead,
             len(vaccinated),
             len(alive),
@@ -456,12 +455,11 @@ class WebSimulation(Simulation):
             'step_id': step_id,
             'total_infected': description[1],
             'current_infected': description[2],
-            'vaccinated_population': description[3],
-            'dead': description[4],
-            'total_vaccinated': description[5],
-            'alive': description[6],
-            'uninfected': description[7],
-            'uninteracted': description[8],
+            'dead': description[3],
+            'total_vaccinated': description[4],
+            'alive': description[5],
+            'uninfected': description[6],
+            'uninteracted': description[7],
             'experiment': experiment
         }
 
