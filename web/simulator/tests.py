@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from .models import Experiment, TimeStep
+from simulator.models import Experiment, TimeStep
 from django.urls import reverse
-from .views import (
+from simulator.views import (
     ExperimentCreate,
     ExperimentDetail,
     ExperimentList,

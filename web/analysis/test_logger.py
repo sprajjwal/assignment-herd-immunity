@@ -1,6 +1,6 @@
 import unittest
-from logger import *
-from person import *
+from .logger import *
+from .person import *
 import os
 
 

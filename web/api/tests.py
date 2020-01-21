@@ -4,7 +4,7 @@ from rest_framework.test import (
 )
 from rest_framework import status
 from django.urls import reverse
-from wiki.models import Experiment, TimeStep
+from simulator.models import Experiment, TimeStep
 from api.serializers import ExperimentSerializer, TimeStepSerializer
 from api.views import TimeStepData
 

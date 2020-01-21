@@ -56,13 +56,13 @@ class Simulation(object):
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
                         self.virus.name, self.pop_size, self.vacc_percentage,
                         self.initial_infected)
-        # self.logger = Logger(self.file_name)
+        self.logger = Logger(self.file_name)
         self.newly_infected = []
         self.population = self._create_population()
-        # self.logger.write_metadata(self.pop_size, self.vacc_percentage,
-        #                            self.virus.name,
-        #                            self.virus.mortality_rate,
-        #                           self.virus.repro_rate)
+        self.logger.write_metadata(self.pop_size, self.vacc_percentage,
+                                   self.virus.name,
+                                   self.virus.mortality_rate,
+                                   self.virus.repro_rate)
 
     def get_infected(self):
         '''Helper function that returns a list of alive infected people'''
@@ -155,7 +155,7 @@ class Simulation(object):
             if not person.is_alive:
                 dead += 1
         return dead
-
+    """
     def run(self, visualizer):
         ''' This method should run the simulation until all requirements for
             ending the simulation are met.
@@ -203,7 +203,7 @@ class Simulation(object):
 
             time_step_counter += 1
         print(f'The simulation has ended after {time_step_counter} turns.',)
-
+    """
     def time_step(self, time_step_counter):
         ''' This method should contain all the logic for computing
             one time step in the simulation.

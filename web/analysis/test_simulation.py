@@ -1,10 +1,10 @@
 import unittest
 import random
 import sys
-from person import Person
-from logger import Logger
-from virus import Virus
-from simulation import *
+from .person import Person
+from .logger import Logger
+from .virus import Virus
+from .simulation import *
 
 
 random.seed(42)
@@ -140,10 +140,10 @@ class TestSimulation(unittest.TestCase):
         virus = Virus("HIV", 0.8, 0.3)
         sim = Simulation(2000, 0.5, virus)
         graph = visualizer.Visualizer("Number of Survivors",
-                                      ("Herd Immunity Defense Against Disease "
-                                       + "Spread"))
+                                         ("Herd Immunity Defense Against "
+                                          + "Disease Spread"))
         assert sim._simulation_should_continue() is False
-        sim.run(graph)
+        sim.run_and_collect(graph)
         assert sim._simulation_should_continue() is True  # True
 
         # Test scenarios that should cause simulation to end

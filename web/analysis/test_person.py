@@ -1,5 +1,5 @@
-from virus import Virus
-from person import Person
+from .virus import Virus
+from .person import Person
 import unittest
 
 
