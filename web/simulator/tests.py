@@ -16,6 +16,7 @@ class ExperimentCreateTests(TestCase):
     def setUp(self):
         '''Instaniate RequestFactory to make requests.'''
         self.factory = RequestFactory()
+        """
         # Experiment object to use for tests
         self.experiment = Experiment.objects.create(title='Ebola Outbreak',
                                                     population_size=1000,
@@ -27,12 +28,19 @@ class ExperimentCreateTests(TestCase):
         self.experiment.save()
         # generate the related TimeStep instances as well
         self.experiment.run_experiment()
+        """
+    def test_getting_create_page(self):
+        '''Site visitor sees the form to add an Experiment.'''
+        request = self.factory.get('simulator:simulation_creator')
+        response = ExperimentCreate.as_view()(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Please fill out the form below.')
 
 
 class ExperimentListTests(TestCase):
     '''A user sees the experiments ran by other users.'''
     def setUp(self):
-        '''Instaniate RequestFactory to make requests.'''
+        '''Instaniate RequestFactory and Experiment objects to use in tests.'''
         self.factory = RequestFactory()
         # Experiment object to use for tests
         self.experiment = Experiment.objects.create(title='Ebola Outbreak',
@@ -60,7 +68,7 @@ class ExperimentListTests(TestCase):
 class ExperimentDetailTests(TestCase):
     '''A user sees in-depth information about the epidemic they simulated.'''
     def setUp(self):
-        '''Instaniate RequestFactory to make requests.'''
+        '''Instaniate RequestFactory and Experiment objects to use in tests.'''
         self.factory = RequestFactory()
         # Experiment object to use for tests
         self.experiment = Experiment.objects.create(title='Ebola Outbreak',
@@ -78,7 +86,7 @@ class ExperimentDetailTests(TestCase):
 class LandingAndAboutPageTests(TestCase):
     '''Users view information about why the site exists, and what it does.'''
     def setUp(self):
-        '''Instaniate RequestFactory and User to make requests.'''
+        '''Instaniate RequestFactory to make requests.'''
         self.factory = RequestFactory()
 
     def get_landing_page(self):

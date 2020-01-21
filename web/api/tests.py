@@ -15,7 +15,7 @@ class TimeStepDataTests(TestCase):
     Experiment.
     """
     def setUp(self):
-        '''Instaniate RequestFactory to make requests.'''
+        '''Instaniate RequestFactory and Experiment objects to use in tests.'''
         self.factory = RequestFactory()
         # Experiment object to use for tests
         self.experiment = Experiment.objects.create(title='Ebola Outbreak',
