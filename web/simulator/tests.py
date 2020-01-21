@@ -23,6 +23,27 @@ class ExperimentListTests(TestCase):
     def setUp(self):
         '''Instaniate RequestFactory and User to make requests.'''
         self.factory = RequestFactory()
+        # Experiment object to use for tests
+        self.experiment = Experiment.objects.create(title='Ebola Outbreak',
+                                                    population_size=1000,
+                                                    vaccination_percent=0.98,
+                                                    virus_name='Ebola',
+                                                    mortality_chance=0.98,
+                                                    reproductive_rate=0.09,
+                                                    initial_infected=12)
+        self.experiment.save()
+
+    def test_getting_list_page(self):
+        '''A site visitor can see Experiment instances already in the db.'''
+        request = self.factory.get('simulator:list')
+        response = ExperimentList.as_view()(request)
+        self.assertEqual(response.status_code, 200)
+        # the page has the correct header
+        self.assertContains(response, 'Past Simulations')
+        # the page correctly displays the number of Experiments in the db
+        self.assertContains(response, '(1)')
+        # the page hs the appropriate info about the Experiment instance
+        self.assertContains(response, 'Ebola Outbreak')
 
 
 class ExperimentDetailTests(TestCase):
