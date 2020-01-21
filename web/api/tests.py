@@ -16,7 +16,7 @@ class TimeStepDataTests(APITestCase):
     """
     def setUp(self):
         '''Instaniate RequestFactory and Experiment objects to use in tests.'''
-        self.factory = RequestFactory()
+        self.factory = APIRequestFactory()
         # Experiment object to use for tests
         self.experiment = Experiment.objects.create(title='Ebola Outbreak',
                                                     population_size=1000,
@@ -32,9 +32,13 @@ class TimeStepDataTests(APITestCase):
         unordered_time_steps = (
             TimeStep.objects.filter(experiment=self.experiment)
         )
-        ordered_time_steps = time_steps.order_by('step_id')
+        ordered_time_steps = unordered_time_steps.order_by('step_id')
         self.time_step = ordered_time_steps.last()
 
-    def test_getting_json_response(self):
+    def test_retrieve_time_step_data(self):
         '''The data returned about the TimeStep is accurate.'''
-        pass
+        url = reverse('api:data', args=[self.time_step.id])
+        request = self.factory.get(url)
+        response = TimeStepData.as_view()(request, self.time_step.id)
+        # the response is able to be shown - carries a Http 200 status
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
