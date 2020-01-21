@@ -44,3 +44,11 @@ class LandingAndAboutPageTests(TestCase):
         response = show_landing()(request)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Doubtful About Vaccines?')
+
+    def get_about_page(self):
+        '''A site vistor is able to see the About section of the site.'''
+        request = self.factory.get('simulator:about')
+        response = show_about_page()(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,
+                            'Why Should You Care About Herd Immunity?')
