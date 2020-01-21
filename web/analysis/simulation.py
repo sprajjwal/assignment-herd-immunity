@@ -359,6 +359,19 @@ class Simulation(object):
 
 class WebSimulation(Simulation):
     '''A Simulation class especially made to work with Django models.'''
+    def __init__(self, pop_size, vacc_percentage, virus, initial_infected=1):
+        '''Same as super class initializer, except no use of Logger.'''
+        self.population = []  # List of Person objects
+        self.pop_size = pop_size  # Int
+        self.next_person_id = pop_size  # Int
+        self.virus = virus  # Virus object
+        self.initial_infected = initial_infected  # Int
+        self.total_infected = 0  # Int
+        self.vacc_percentage = vacc_percentage  # float between 0 and 1
+        self.total_dead = 0  # Int
+        self.newly_infected = []
+        self.population = self._create_population()
+
     def store_vacc_persons(self, alive):
         """Return people in the population who are alive and vaccinated.
 
@@ -438,17 +451,19 @@ class WebSimulation(Simulation):
         self.time_step(step_id)
         # get a verbal report of the time step results
         description = self.make_report(step_id)
-        # return a TimeStep instance with these fields
-        return TimeStep.objects.create(step_id=step_id,
-                                       total_infected=description[1],
-                                       current_infected=description[2],
-                                       vaccinated_population=description[3],
-                                       dead=description[4],
-                                       total_vaccinated=description[5],
-                                       alive=description[6],
-                                       uninfected=description[7],
-                                       uninteracted=description[8],
-                                       experiment=experiment)
+        # return fields and values to make new TimeStep
+        return {
+            'step_id': step_id,
+            'total_infected': description[1],
+            'current_infected': description[2],
+            'vaccinated_population': description[3],
+            'dead': description[4],
+            'total_vaccinated': description[5],
+            'alive': description[6],
+            'uninfected': description[7],
+            'uninteracted': description[8],
+            'experiment': experiment
+        }
 
     def run_and_collect(self, experiment):
         """This method should run the simulation until all requirements for
@@ -466,16 +481,17 @@ class WebSimulation(Simulation):
         simulation_should_continue = 0
         should_continue = None
         assert self.population[0]._id == 0
-        # make TimeStep instances as the simulation runs
+        # collect data to make TimeStep instances as the simulation runs
+        collection_data = list()
         while True:
-            time_step = self.create_time_step(time_step_counter, experiment)
-            time_step.save()
+            collection_data.append(
+                self.create_time_step(time_step_counter, experiment))
             # decide to continue
             if self._simulation_should_continue():
                 simulation_should_continue += 1
                 break
             time_step_counter += 1
-        return None
+        return collection_data
 
 
 if __name__ == "__main__":

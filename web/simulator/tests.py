@@ -16,25 +16,34 @@ class ExperimentCreateTests(TestCase):
     def setUp(self):
         '''Instaniate RequestFactory to make requests.'''
         self.factory = RequestFactory()
-        """
-        # Experiment object to use for tests
-        self.experiment = Experiment.objects.create(title='Ebola Outbreak',
-                                                    population_size=1000,
-                                                    vaccination_percent=0.98,
-                                                    virus_name='Ebola',
-                                                    mortality_chance=0.98,
-                                                    reproductive_rate=0.09,
-                                                    initial_infected=12)
-        self.experiment.save()
-        # generate the related TimeStep instances as well
-        self.experiment.run_experiment()
-        """
+
     def test_getting_create_page(self):
         '''Site visitor sees the form to add an Experiment.'''
         request = self.factory.get('simulator:simulation_creator')
         response = ExperimentCreate.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Please fill out the form below.')
+
+    def test_submitting_create_form(self):
+        '''A site visitor adds a new Experiment.'''
+        # data inputted by visitor into the form
+        title = 'Ebola Outbreak'
+        form_data = {
+            'title': title,
+            'population_size': 1000,
+            'vaccination_percent': 0.98,
+            'virus_name': 'Ebola',
+            'mortality_chance': 0.98,
+            'reproductive_rate': 0.09,
+            'initial_infected': 12
+        }
+        request = self.factory.post('simulator:simulation_creator', form_data)
+        response = ExperimentCreate.as_view()(request)
+        # a new Experiment is inserted in the db
+        new_experiment = Experiment.objects.get(title=title)
+        self.assertTrue(new_experiment, not None)
+        # the visitor is redirected
+        self.assertEqual(response.status_code, 302)
 
 
 class ExperimentListTests(TestCase):

@@ -69,8 +69,23 @@ class Experiment(models.Model):
         '''Runs through the experiment, and generates time step graphs.'''
         # update Simulation properties with form data
         web_sim = self.generate_web_sim()
-        # run through time steps
-        web_sim.run_and_collect(self)
+        # run through the simulation, collect data to make TimeStep instances
+        time_step_collection = web_sim.run_and_collect(self)
+        # insert new TimeSteps into the db
+        for ts in time_step_collection:
+            time_step = TimeStep.objects.create(
+                step_id=ts.get('step_id'),
+                total_infected=ts.get('total_infected'),
+                current_infected=ts.get('current_infected'),
+                vaccinated_population=ts.get('vaccinated_population'),
+                dead=ts.get('dead'),
+                total_vaccinated=ts.get('total_vaccinated'),
+                alive=ts.get('alive'),
+                uninfected=ts.get('uninfected'),
+                uninteracted=ts.get('uninteracted'),
+                experiment=ts.get('experiment')
+            )
+            time_step.save()
 
 
 class TimeStep(models.Model):
