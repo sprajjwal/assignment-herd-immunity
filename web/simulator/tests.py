@@ -91,6 +91,21 @@ class ExperimentDetailTests(TestCase):
         # generate the related TimeStep instances as well
         self.experiment.run_experiment()
 
+    def test_get_details_for_one_experiment(self):
+        '''Site visitor sees more nuanced data about an Experiment instance.'''
+        id = self.experiment.id
+        request = self.factory.get(f'/{id}/')
+        response = ExperimentDetail.as_view()(request, id)
+        # the response carries a 200 status
+        self.assertEqual(response.status_code, 200)
+        # the correct content appears on the page
+        self.assertContains(response, 'And the Results Are In!')
+        # there is a row whose step id matches that of an actual TimeStep
+        time_step_id = (
+            TimeStep.objects.filter(experiment=self.experiment).last().step_id
+        )
+        self.assertContains(response, f'<th scope="row">{time_step_id}</th>')
+
 
 class LandingAndAboutPageTests(TestCase):
     '''Users view information about why the site exists, and what it does.'''
