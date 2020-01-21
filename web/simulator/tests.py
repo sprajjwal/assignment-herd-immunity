@@ -37,3 +37,10 @@ class LandingAndAboutPageTests(TestCase):
     def setUp(self):
         '''Instaniate RequestFactory and User to make requests.'''
         self.factory = RequestFactory()
+
+    def get_landing_page(self):
+        '''A site visitor is able to see the landing page of the site.'''
+        request = self.factory.get('simulator:home')
+        response = show_landing()(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Doubtful About Vaccines?')
