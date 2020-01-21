@@ -14,4 +14,6 @@ class TimeStepDataTests(TestCase):
     This endpoint returns data about the final TimeStep related to an
     Experiment.
     """
-    pass
+    def setUp(self):
+        '''Instaniate RequestFactory and User to make requests.'''
+        self.factory = RequestFactory()
