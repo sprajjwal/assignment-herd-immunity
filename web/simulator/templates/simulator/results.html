@@ -3,6 +3,7 @@
 
 <!-- user sees results of the simulation -->
 {% block content %}
+<div class="container">
     <h1>And the Results Are In!</h1>
     <h2>Did your population survive the epidemic?</h2>
     <hr
@@ -68,5 +69,6 @@
         <a href="{% url 'simulator:list' %}" class="btn btn-primary">See More Simulations</a>
     </div>
     <br><br>
+</div>
 
 {% endblock %}

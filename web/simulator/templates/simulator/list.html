@@ -2,6 +2,7 @@
 {% extends "simulator/base.html" %}
 
 {% block content %}
+<div class="container">
     <!-- display title of page, and number of simulations to display -->
     <h1>Past Simulations <small class="text-muted">({{ experiments|length }})</small></h1>
     <p>Thank you for your curiosity! <br>
@@ -23,4 +24,5 @@
             </li>
         {% endfor %}
     </ul>
+</div>
 {% endblock %}

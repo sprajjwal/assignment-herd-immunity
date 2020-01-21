@@ -1,11 +1,11 @@
 <!-- simulator/templates/simulator/index.html -->
 
 {% extends "simulator/base.html" %}
-
+{% load static %}
 {% block content %}
-    <div class="jumbotron jumbotron-fluid bg-white">
-        <h1 class="display-1 text-center">Don't Believe in Vaccines?</h1>
-        <h2 class="text-center">Let's put that belief to the test.</h2>
+    <div class="jumbotron jumbotron-fluid bg-white text-white mb-0" style="background-image: url('{% static 'images/virus.jpg' %}'); background-position:center; height: 1000px;">
+        <h1 class="display-1 text-center">Doubtful About Vaccines?</h1>
+        <h2 class="text-center">See how they protect against epidemics.</h2>
         <hr class="my-4">
         <h3 class="text-center">Herd Immunity Simulator</h3>
         <br><br>
@@ -16,7 +16,12 @@
             </div>
             <div class="col-md-5">
                 <!-- Link to ExperimentList -->
-                <a class="btn btn-primary btn-lg" href="{% url 'simulator:list' %}" role="button">See Other's Results</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'simulator:list' %}" role="button">Look at Previous Results</a>
             </div>
+            <br><br><br><br><br>
+            <!-- Photo Credit -->
+            <p class="text-center text-white">Background photo by CDC on Unsplash <br>
+            Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+            </p>
         </div>
 {% endblock %}

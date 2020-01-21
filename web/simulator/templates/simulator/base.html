@@ -16,11 +16,13 @@
 <body>
 
     <!-- navbar -->
+    {% load static %}
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 
     <div class="navbar-brand d-flex w-50 ml-2">
         <span class="text-white">
             <div class="row">
+                <img src="{% static 'images/vaccine.png' %}" alt="logo" width="40px" heigth="40px">
                 <h2><a href="{% url 'simulator:home' %}" style="color: white;">Herd Immunity</a></h2>
             </div>
         </span>
@@ -49,10 +51,8 @@
     </nav>
 
     <!-- content -->
-    <div class="container">
         {% block content %}
         {% endblock %}
-    </div>
 
     <!-- jQuery and Ajax needed for Chart.js -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
