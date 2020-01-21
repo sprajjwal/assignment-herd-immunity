@@ -9,7 +9,7 @@ from api.serializers import ExperimentSerializer, TimeStepSerializer
 from api.views import TimeStepData
 
 
-class TimeStepDataTests(TestCase):
+class TimeStepDataTests(APITestCase):
     """
     This endpoint returns data about the final TimeStep related to an
     Experiment.
@@ -28,3 +28,13 @@ class TimeStepDataTests(TestCase):
         self.experiment.save()
         # generate the related TimeStep instances as well
         self.experiment.run_experiment()
+        # capture the related TimeStep as an attirbute
+        unordered_time_steps = (
+            TimeStep.objects.filter(experiment=self.experiment)
+        )
+        ordered_time_steps = time_steps.order_by('step_id')
+        self.time_step = ordered_time_steps.last()
+
+    def test_getting_json_response(self):
+        '''The data returned about the TimeStep is accurate.'''
+        pass
